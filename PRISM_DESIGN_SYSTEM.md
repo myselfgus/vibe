@@ -201,8 +201,7 @@ import { Badge } from '@/components/ui/badge';
 <Button
   variant="default"
   size="lg"
-  className="iridescent-glow-hover"
->
+  className="iridescent-glow-hover">
   Critical Action
 </Button>
 ```
