@@ -4,6 +4,7 @@ import { GPUComputationRenderer } from 'three/examples/jsm/misc/GPUComputationRe
 const positionShader = /* glsl */ `
 uniform float uTime;
 uniform float uDeltaTime;
+uniform sampler2D initialPositions;
 
 float hash(vec3 p) {
   p = fract(p * vec3(443.897, 441.423, 437.195));
@@ -54,15 +55,34 @@ vec3 curlNoise(vec3 p) {
 
 void main() {
   vec2 uv = gl_FragCoord.xy / resolution.xy;
-  vec4 pos = texture2D(texturePosition, uv);
+  vec4 initialPos = texture2D(initialPositions, uv);
 
-  vec3 velocity = curlNoise(pos.xyz * 0.3 + uTime * 0.1);
-  pos.xyz += velocity * uDeltaTime * 0.3;
+  // Calculate orbital position based on initial position
+  float radius = length(initialPos.xz);
+  float angle = atan(initialPos.z, initialPos.x);
 
-  float damping = 0.98;
-  pos.xyz *= damping;
+  // Orbital rotation speed (varies per particle for organic feel)
+  float speedVariation = hash(initialPos.xyz);
+  float rotationSpeed = 0.15 + speedVariation * 0.1;
 
-  gl_FragColor = pos;
+  // New angle with time-based rotation
+  float newAngle = angle + uTime * rotationSpeed;
+
+  // Vertical wave motion
+  float verticalSpeed = 0.3 + speedVariation * 0.2;
+  float verticalWave = sin(uTime * verticalSpeed + initialPos.y * 2.0) * 0.3;
+
+  // Subtle radius pulsing
+  float radiusPulse = sin(uTime * 0.5 + speedVariation * 6.28) * 0.1;
+  float currentRadius = radius + radiusPulse;
+
+  // Calculate new position
+  vec3 newPos;
+  newPos.x = cos(newAngle) * currentRadius;
+  newPos.z = sin(newAngle) * currentRadius;
+  newPos.y = initialPos.y + verticalWave;
+
+  gl_FragColor = vec4(newPos, 1.0);
 }
 `;
 
@@ -128,6 +148,7 @@ export class GPUSimulation {
 
     this.positionVariable.material.uniforms.uTime = { value: 0 };
     this.positionVariable.material.uniforms.uDeltaTime = { value: 0 };
+    this.positionVariable.material.uniforms.initialPositions = { value: this.initialPositions };
 
     const error = this.gpu.init();
     if (error !== null) {

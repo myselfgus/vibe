@@ -109,16 +109,25 @@ export class DofPointsMaterial extends THREE.ShaderMaterial {
         float sdf = sdCircle(cxy, 0.5);
         if (sdf > 0.0) discard;
 
+        // Keep particles always visible in orbital range
         float distanceFromCenter = length(vWorldPosition.xz);
         float noiseValue = periodicNoise(vInitialPosition * 4.0, 0.0);
-        float revealThreshold = uRevealFactor + noiseValue * 0.3;
-        float revealMask = 1.0 - smoothstep(revealThreshold - 0.2, revealThreshold + 0.1, distanceFromCenter);
+
+        // Smooth fade at edges of orbital range (radius 2-5)
+        float innerRadius = 1.5;
+        float outerRadius = 5.5;
+        float radialFade = smoothstep(innerRadius, innerRadius + 0.5, distanceFromCenter) *
+                           (1.0 - smoothstep(outerRadius - 0.5, outerRadius, distanceFromCenter));
+
+        float revealMask = mix(0.3, 1.0, radialFade);
 
         float sparkleBrightness = sparkleNoise(vInitialPosition, uTime);
 
+        // Keep particles visible continuously with smooth reveal
+        float revealFactor = max(uRevealProgress, 0.5);
         float alpha = (1.04 - clamp(vDistance, 0.0, 1.0)) *
                       clamp(smoothstep(-0.5, 0.25, vPosY), 0.0, 1.0) *
-                      uOpacity * revealMask * uRevealProgress *
+                      uOpacity * revealMask * revealFactor *
                       sparkleBrightness;
 
         float transitionBoost = mix(1.0, 1.8, uTransition);
