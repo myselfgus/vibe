@@ -157,6 +157,15 @@
 	--accent: 95 35% 38%; /* #556b2f - Moss Green */
 	--accent-foreground: 95 10% 98%;
 
+	/* === AURORA DESIGN SYSTEM v2 (Siri 2025 Inspired) === */
+	--aurora-1: 268 100% 72%; /* Indigo Electric */
+	--aurora-2: 302 100% 80%; /* Magenta Vibrant */
+	--aurora-3: 327 100% 85%; /* Hot Pink Soft */
+	--aurora-4: 255 100% 80%; /* Purple Soft */
+	--aurora-5: 292 80% 78%; /* Blue Aurora (primary) */
+	--aurora-6: 195 100% 70%; /* Cyan Glow */
+	--aurora-7: 35 100% 82%; /* Soft Orange */
+
 	/* === Secondary & Muted === */
 	--secondary: 210 12% 88%; /* #d8dde3 */
 	--secondary-foreground: 210 25% 12%;
@@ -222,6 +231,15 @@
 	--primary-foreground: 210 10% 10%;
 	--accent: 95 42% 48%; /* More vibrant moss green */
 	--accent-foreground: 95 10% 10%;
+
+	/* === AURORA DESIGN SYSTEM v2 (Same as light mode) === */
+	--aurora-1: 268 100% 72%; /* Indigo Electric */
+	--aurora-2: 302 100% 80%; /* Magenta Vibrant */
+	--aurora-3: 327 100% 85%; /* Hot Pink Soft */
+	--aurora-4: 255 100% 80%; /* Purple Soft */
+	--aurora-5: 292 80% 78%; /* Blue Aurora (primary) */
+	--aurora-6: 195 100% 70%; /* Cyan Glow */
+	--aurora-7: 35 100% 82%; /* Soft Orange */
 
 	/* === Secondary & Muted === */
 	--secondary: 210 15% 18%;
@@ -829,4 +847,232 @@ display: none; /* Chrome, Safari, Opera */
 
 .prism-transition-fast {
 	transition: all 0.15s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+/* ============================================
+   AURORA DESIGN SYSTEM v2 UTILITIES
+   Siri 2025 Inspired - Multicolor Iridescent Glow
+   ============================================ */
+
+/* Aurora Gradient - Core gradient used everywhere */
+@utility aurora-gradient {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--aurora-1)) 0%,
+		hsl(var(--aurora-2)) 20%,
+		hsl(var(--aurora-3)) 40%,
+		hsl(var(--aurora-4)) 60%,
+		hsl(var(--aurora-5)) 80%,
+		hsl(var(--aurora-6)) 100%
+	);
+	background-size: 200% 200%;
+	animation: aurora-flow 12s ease infinite;
+}
+
+/* Aurora Flow Animation */
+@keyframes aurora-flow {
+	0%, 100% { background-position: 0% 50%; }
+	50% { background-position: 100% 50%; }
+}
+
+/* Aurora Pulse Animation (for glows) */
+@keyframes aurora-pulse {
+	0%, 100% {
+		filter: brightness(1) saturate(1);
+		transform: scale(1);
+	}
+	50% {
+		filter: brightness(1.4) saturate(1.8);
+		transform: scale(1.02);
+	}
+}
+
+/* Aurora Glow - Soft multicolor glow in resting state */
+.aurora-glow {
+	box-shadow:
+		0 0 60px 30px hsl(var(--aurora-5) / 0.4),
+		0 0 100px 60px hsl(var(--aurora-2) / 0.3),
+		0 0 140px 90px hsl(var(--aurora-1) / 0.25);
+	animation: aurora-pulse 8s ease-in-out infinite alternate;
+}
+
+/* Aurora Glow Hover - Explosive glow on hover */
+.aurora-glow-hover {
+	transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.aurora-glow-hover:hover {
+	box-shadow:
+		0 0 80px 40px hsl(var(--aurora-5) / 0.7),
+		0 0 120px 80px hsl(var(--aurora-2) / 0.6),
+		0 0 160px 110px hsl(var(--aurora-1) / 0.5);
+	transform: translateY(-6px) scale(1.02);
+}
+
+/* Aurora Border - Gradient border effect */
+.aurora-border {
+	border: 1.5px solid transparent;
+	background: linear-gradient(hsl(var(--background)), hsl(var(--background))) padding-box,
+		linear-gradient(
+			135deg,
+			hsl(var(--aurora-1)),
+			hsl(var(--aurora-2)),
+			hsl(var(--aurora-3)),
+			hsl(var(--aurora-4)),
+			hsl(var(--aurora-5)),
+			hsl(var(--aurora-6))
+		) border-box;
+	background-size: 100% 100%, 200% 200%;
+	animation: aurora-border-flow 12s ease infinite;
+}
+
+.dark .aurora-border {
+	background: linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
+		linear-gradient(
+			135deg,
+			hsl(var(--aurora-1)),
+			hsl(var(--aurora-2)),
+			hsl(var(--aurora-3)),
+			hsl(var(--aurora-4)),
+			hsl(var(--aurora-5)),
+			hsl(var(--aurora-6))
+		) border-box;
+	background-size: 100% 100%, 200% 200%;
+	animation: aurora-border-flow 12s ease infinite;
+}
+
+@keyframes aurora-border-flow {
+	0%, 100% { background-position: 0% 0%, 0% 50%; }
+	50% { background-position: 0% 0%, 100% 50%; }
+}
+
+/* Aurora Text - Gradient text effect */
+.aurora-text {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--aurora-1)),
+		hsl(var(--aurora-2)),
+		hsl(var(--aurora-3)),
+		hsl(var(--aurora-4)),
+		hsl(var(--aurora-5)),
+		hsl(var(--aurora-6))
+	);
+	background-size: 200% 200%;
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	animation: aurora-flow 12s ease infinite;
+}
+
+/* Glass Panel - Enhanced glassmorphism for Aurora system */
+.glass-panel {
+	background: rgba(255, 255, 255, 0.05);
+	backdrop-filter: blur(24px);
+	-webkit-backdrop-filter: blur(24px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 1.5rem;
+}
+
+.dark .glass-panel {
+	background: rgba(0, 0, 0, 0.2);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Aurora Card - Complete card component with all effects */
+.aurora-card {
+	background: hsl(var(--card));
+	border-radius: 1.5rem;
+	padding: 1.5rem;
+	transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+	position: relative;
+	overflow: hidden;
+}
+
+.aurora-card::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: 1.5rem;
+	padding: 1.5px;
+	background: linear-gradient(
+		135deg,
+		hsl(var(--aurora-1) / 0.3),
+		hsl(var(--aurora-2) / 0.3),
+		hsl(var(--aurora-5) / 0.3)
+	);
+	-webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+	-webkit-mask-composite: xor;
+	mask-composite: exclude;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.aurora-card:hover::before {
+	opacity: 1;
+}
+
+.aurora-card:hover {
+	transform: translateY(-4px);
+	box-shadow:
+		0 0 60px 20px hsl(var(--aurora-5) / 0.3),
+		0 0 100px 40px hsl(var(--aurora-2) / 0.2);
+}
+
+/* Aurora Button Effects */
+.aurora-button {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--aurora-1)),
+		hsl(var(--aurora-2)),
+		hsl(var(--aurora-5))
+	);
+	background-size: 200% 200%;
+	animation: aurora-flow 12s ease infinite;
+	color: white;
+	border: none;
+	box-shadow:
+		0 0 40px 10px hsl(var(--aurora-5) / 0.3),
+		0 0 80px 20px hsl(var(--aurora-2) / 0.2);
+	transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.aurora-button:hover {
+	box-shadow:
+		0 0 60px 20px hsl(var(--aurora-5) / 0.6),
+		0 0 100px 40px hsl(var(--aurora-2) / 0.4);
+	transform: translateY(-2px) scale(1.02);
+}
+
+.aurora-button:active {
+	transform: translateY(0) scale(0.98);
+}
+
+/* Aurora Input Focus Effect */
+.aurora-input-focus:focus {
+	outline: none;
+	box-shadow:
+		var(--shadow-neomorph-inset),
+		0 0 0 2px hsl(var(--aurora-5) / 0.5);
+}
+
+/* Aurora Badge */
+.aurora-badge {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--aurora-1) / 0.15),
+		hsl(var(--aurora-5) / 0.15)
+	);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid hsl(var(--aurora-5) / 0.3);
+	color: hsl(var(--aurora-5));
+	padding: 0.25rem 0.75rem;
+	border-radius: 9999px;
+	font-size: 0.75rem;
+	font-weight: 600;
+}
+
+.dark .aurora-badge {
+	color: hsl(var(--aurora-3));
+	border-color: hsl(var(--aurora-3) / 0.3);
 }
