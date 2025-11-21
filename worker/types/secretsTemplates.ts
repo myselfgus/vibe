@@ -101,6 +101,19 @@ export function getTemplatesData(): SecretTemplate[] {
 			required: false,
 			category: 'ai',
 		},
+		{
+			id: 'XAI_API_KEY',
+			displayName: 'xAI API Key',
+			envVarName: 'XAI_API_KEY',
+			provider: 'xai',
+			icon: '🤖',
+			description: 'xAI Grok API key',
+			instructions: 'Go to xAI Console → API Keys → Create new key',
+			placeholder: 'xai-...',
+			validation: '^xai-[a-zA-Z0-9_-]{20,}$',
+			required: false,
+			category: 'ai',
+		},
 
 		// BYOK (Bring Your Own Key) AI Providers - Lenient validation for compatibility
 		{
@@ -157,6 +170,20 @@ export function getTemplatesData(): SecretTemplate[] {
 			instructions: 'Go to Cerebras Platform → API Keys → Create new key',
 			placeholder: 'csk-... or any format',
 			validation: '^.{10,}$',
+			required: false,
+			category: 'byok',
+		},
+		{
+			id: 'XAI_API_KEY_BYOK',
+			displayName: 'xAI (BYOK)',
+			envVarName: 'XAI_API_KEY_BYOK',
+			provider: 'xai',
+			icon: '🤖',
+			description:
+				'Use your xAI API key for Grok models via Cloudflare AI Gateway',
+			instructions: 'Go to xAI Console → API Keys → Create new key',
+			placeholder: 'xai-...',
+			validation: '^xai-.{10,}$',
 			required: false,
 			category: 'byok',
 		},

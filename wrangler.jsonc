@@ -144,7 +144,7 @@
         "ALLOWED_EMAIL": "1@voither.com",
         "DISPATCH_NAMESPACE": "vibesdk",
         "ENABLE_READ_REPLICAS": "true",
-        "CLOUDFLARE_AI_GATEWAY": "vibesdk-gateway",
+        "CLOUDFLARE_AI_GATEWAY": "voither",
         "CUSTOM_DOMAIN": "go4pilot.com",
         "MAX_SANDBOX_INSTANCES": "2",
         "SANDBOX_INSTANCE_TYPE": "standard-3",

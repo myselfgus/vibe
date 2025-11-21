@@ -29,6 +29,11 @@ export enum AIModels {
 	CLAUDE_4_OPUS = 'anthropic/claude-opus-4-20250514',
 	CLAUDE_4_SONNET = 'anthropic/claude-sonnet-4-20250514',
 
+	XAI_GROK_2_LATEST = 'xai/grok-2-latest',
+	XAI_GROK_2_1212 = 'xai/grok-2-1212',
+	XAI_GROK_BETA = 'xai/grok-beta',
+	XAI_GROK_VISION_BETA = 'xai/grok-vision-beta',
+
 	OPENAI_O3 = 'openai/o3',
 	OPENAI_O4_MINI = 'openai/o4-mini',
 	OPENAI_CHATGPT_4O_LATEST = 'openai/chatgpt-4o-latest',
