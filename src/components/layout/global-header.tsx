@@ -52,14 +52,9 @@ export function GlobalHeader() {
 								className='flex items-center'
 							>
 								<SidebarTrigger className="h-8 w-8 text-foreground rounded-md hover:bg-muted prism-transition transition-colors duration-200" />
-								<CloudflareLogo
-									className="flex-shrink-0 mx-auto transition-all duration-300"
-									style={{
-										width: '28px',
-										height: '28px',
-										marginLeft: '8px',
-									}}
-								/>
+								<span className="font-josefin font-extrabold text-2xl text-foreground ml-3 tracking-tight">
+									C2C
+								</span>
 								{hasMaintenanceMessage && (
 									<button
 										type="button"

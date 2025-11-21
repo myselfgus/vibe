@@ -16,6 +16,7 @@ import { useDragDrop } from '@/hooks/use-drag-drop';
 import { ImageUploadButton } from '@/components/image-upload-button';
 import { ImageAttachmentPreview } from '@/components/image-attachment-preview';
 import { SUPPORTED_FILE_MIME_TYPES } from '@/api-types';
+import { AnimatedBackground } from '@/components/animated-background';
 
 export default function Home() {
 	const navigate = useNavigate();
@@ -134,32 +135,12 @@ export default function Home() {
 
 	return (
 		<div className="relative flex flex-col items-center size-full">
-			{/* Dotted background pattern - extends to full viewport */}
-			<div className="fixed inset-0 text-accent z-0 opacity-20 pointer-events-none">
-				<svg width="100%" height="100%">
-					<defs>
-						<pattern
-							id=":S2:"
-							viewBox="-6 -6 12 12"
-							patternUnits="userSpaceOnUse"
-							width="12"
-							height="12"
-						>
-							<circle
-								cx="0"
-								cy="0"
-								r="1"
-								fill="currentColor"
-							></circle>
-						</pattern>
-					</defs>
-					<rect
-						width="100%"
-						height="100%"
-						fill="url(#:S2:)"
-					></rect>
-				</svg>
-			</div>
+			{/* Animated background with shader effect */}
+			<AnimatedBackground
+				imageUrl="https://imagedelivery.net/1a481f7cdb7027c30174a692c89cbda1/6c9aea3d-c380-4658-ecaa-65d4afe1a100/public"
+				intensity={0.12}
+				speed={0.0004}
+			/>
 			
 			<LayoutGroup>
 				<div className="rounded-md w-full max-w-2xl overflow-hidden">
@@ -170,7 +151,7 @@ export default function Home() {
 							"px-6 p-8 flex flex-col items-center z-10",
 							discoverReady ? "mt-48" : "mt-[20vh] sm:mt-[24vh] md:mt-[28vh]"
 						)}>
-						<h1 className="text-shadow-sm text-shadow-red-200 dark:text-shadow-red-900 text-accent iridescent-text leading-[1.1] tracking-tight text-5xl w-full mb-4" style={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 800 }}>
+						<h1 className="text-foreground leading-[1.1] tracking-tight text-5xl w-full mb-4 font-josefin font-extrabold">
 							CONCEPT2CODE
 						</h1>
 
