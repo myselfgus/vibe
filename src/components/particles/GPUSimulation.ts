@@ -71,9 +71,20 @@ interface GPUSimulationOptions {
   renderer: THREE.WebGLRenderer;
 }
 
+interface GPUVariable {
+  material: {
+    uniforms: {
+      uTime: { value: number };
+      uDeltaTime: { value: number };
+      [key: string]: { value: unknown };
+    };
+  };
+  [key: string]: unknown;
+}
+
 export class GPUSimulation {
   private gpu: GPUComputationRenderer;
-  private positionVariable: any;
+  private positionVariable: GPUVariable;
   public initialPositions: THREE.DataTexture;
   public positions: THREE.Texture;
 
@@ -111,9 +122,9 @@ export class GPUSimulation {
       'texturePosition',
       positionShader,
       positionTexture
-    );
+    ) as unknown as GPUVariable;
 
-    this.gpu.setVariableDependencies(this.positionVariable, [this.positionVariable]);
+    this.gpu.setVariableDependencies(this.positionVariable as any, [this.positionVariable as any]);
 
     this.positionVariable.material.uniforms.uTime = { value: 0 };
     this.positionVariable.material.uniforms.uDeltaTime = { value: 0 };
@@ -123,14 +134,14 @@ export class GPUSimulation {
       console.error('GPUComputationRenderer error:', error);
     }
 
-    this.positions = this.gpu.getCurrentRenderTarget(this.positionVariable).texture;
+    this.positions = this.gpu.getCurrentRenderTarget(this.positionVariable as any).texture;
   }
 
   update(time: number, deltaTime: number) {
     this.positionVariable.material.uniforms.uTime.value = time;
     this.positionVariable.material.uniforms.uDeltaTime.value = deltaTime;
     this.gpu.compute();
-    this.positions = this.gpu.getCurrentRenderTarget(this.positionVariable).texture;
+    this.positions = this.gpu.getCurrentRenderTarget(this.positionVariable as any).texture;
   }
 
   dispose() {

@@ -40,11 +40,26 @@ function Particles() {
     material.uniforms.initialPositions.value = simulation.initialPositions;
     material.uniforms.uRevealProgress.value = 0;
     material.uniforms.uRevealFactor.value = 10;
+
+    const updateTheme = () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      if (materialRef.current) {
+        materialRef.current.uniforms.uIsDarkMode.value = isDark ? 1.0 : 0.0;
+      }
+    };
+
+    updateTheme();
     materialRef.current = material;
 
     if (meshRef.current) {
       meshRef.current.material = material;
     }
+
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
 
     let revealProgress = 0;
     const revealInterval = setInterval(() => {
@@ -60,6 +75,7 @@ function Particles() {
 
     return () => {
       clearInterval(revealInterval);
+      observer.disconnect();
       simulation.dispose();
       material.dispose();
       geometry.dispose();
@@ -89,7 +105,6 @@ export function ParticlesBackground() {
         gl={{ alpha: true, antialias: true }}
         style={{ background: 'transparent' }}
       >
-        <color attach="background" args={['#fafafa']} />
         <Particles />
       </Canvas>
     </div>

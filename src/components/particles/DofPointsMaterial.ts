@@ -65,6 +65,7 @@ export class DofPointsMaterial extends THREE.ShaderMaterial {
       uniform float uRevealFactor;
       uniform float uRevealProgress;
       uniform float uTime;
+      uniform float uIsDarkMode;
       varying float vDistance;
       varying float vPosY;
       varying vec3 vWorldPosition;
@@ -121,9 +122,15 @@ export class DofPointsMaterial extends THREE.ShaderMaterial {
                       sparkleBrightness;
 
         float transitionBoost = mix(1.0, 1.8, uTransition);
-        vec3 darkColor = vec3(sparkleBrightness * 0.3) * transitionBoost;
 
-        gl_FragColor = vec4(darkColor, alpha);
+        vec3 particleColor;
+        if (uIsDarkMode > 0.5) {
+          particleColor = vec3(sparkleBrightness) * transitionBoost;
+        } else {
+          particleColor = vec3(sparkleBrightness * 0.3) * transitionBoost;
+        }
+
+        gl_FragColor = vec4(particleColor, alpha);
       }`,
 
       uniforms: {
@@ -137,7 +144,8 @@ export class DofPointsMaterial extends THREE.ShaderMaterial {
         uPointSize: { value: 2.0 },
         uOpacity: { value: 1.0 },
         uRevealFactor: { value: 0.0 },
-        uRevealProgress: { value: 0.0 }
+        uRevealProgress: { value: 0.0 },
+        uIsDarkMode: { value: 1.0 }
       },
       transparent: true,
       depthWrite: false,
