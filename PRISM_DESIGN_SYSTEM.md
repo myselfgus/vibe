@@ -281,5 +281,5 @@ Replace old utility classes:
 
 - Design Tokens: `/src/lib/design-system/prism-tokens.ts`
 - Contrast Utilities: `/src/lib/design-system/contrast-correction.ts`
-- CSS Utilities: `/src/index.css` (lines 479-698)
+- CSS Utilities: `/src/index.css`
 - Component Examples: `/src/components/ui/`
