@@ -74,6 +74,21 @@ export class DofPointsMaterial extends THREE.ShaderMaterial {
 
       ${periodicNoiseGLSL}
 
+      // Fractional Brownian Motion for fractal patterns
+      float fbm(vec3 p) {
+        float value = 0.0;
+        float amplitude = 0.5;
+        float frequency = 1.0;
+
+        for(int i = 0; i < 4; i++) {
+          value += amplitude * periodicNoise(p * frequency, 10.0);
+          frequency *= 2.0;
+          amplitude *= 0.5;
+        }
+
+        return value;
+      }
+
       float sparkleNoise(vec3 seed, float time) {
         float hash = sin(seed.x * 127.1 + seed.y * 311.7 + seed.z * 74.7) * 43758.5453;
         hash = fract(hash);
@@ -121,23 +136,54 @@ export class DofPointsMaterial extends THREE.ShaderMaterial {
 
         float revealMask = mix(0.3, 1.0, radialFade);
 
+        // Subtle sparkle for glass effect
         float sparkleBrightness = sparkleNoise(vInitialPosition, uTime);
+
+        // Glass edge highlight (brighter at edges)
+        float edgeDist = length(cxy);
+        float glassEdge = smoothstep(0.3, 0.5, edgeDist);
+
+        // Fractal texture for glass detail
+        vec3 fractalPos = vWorldPosition * 2.0 + uTime * 0.02;
+        float fractalPattern = fbm(fractalPos);
+
+        // Iridescent hue based on position, time, and fractal
+        float hueShift = fract(
+          vInitialPosition.x * 0.3 +
+          vInitialPosition.z * 0.3 +
+          fractalPattern * 0.2 +
+          uTime * 0.05
+        );
+
+        // Subtle iridescent colors (very desaturated)
+        vec3 iridescent;
+        iridescent.r = 0.5 + cos(hueShift * 6.28318) * 0.15;
+        iridescent.g = 0.5 + cos((hueShift + 0.333) * 6.28318) * 0.15;
+        iridescent.b = 0.5 + cos((hueShift + 0.666) * 6.28318) * 0.15;
 
         // Keep particles visible continuously with smooth reveal
         float revealFactor = max(uRevealProgress, 0.5);
         float alpha = (1.04 - clamp(vDistance, 0.0, 1.0)) *
                       clamp(smoothstep(-0.5, 0.25, vPosY), 0.0, 1.0) *
                       uOpacity * revealMask * revealFactor *
-                      sparkleBrightness;
+                      sparkleBrightness * 0.4;
 
-        float transitionBoost = mix(1.0, 1.8, uTransition);
-
-        vec3 particleColor;
+        // Glass-like transparent color with subtle iridescence
+        vec3 glassBase;
         if (uIsDarkMode > 0.5) {
-          particleColor = vec3(sparkleBrightness) * transitionBoost;
+          // Dark mode: subtle white with iridescent tint
+          glassBase = mix(vec3(0.9), iridescent, 0.2);
         } else {
-          particleColor = vec3(sparkleBrightness * 0.3) * transitionBoost;
+          // Light mode: very subtle gray with iridescent tint
+          glassBase = mix(vec3(0.4), iridescent, 0.15);
         }
+
+        // Add fractal texture variation
+        float fractalVariation = fractalPattern * 0.15 + 0.85;
+        glassBase *= fractalVariation;
+
+        // Add edge glow for glass effect
+        vec3 particleColor = mix(glassBase * 0.6, glassBase, glassEdge);
 
         gl_FragColor = vec4(particleColor, alpha);
       }`,
