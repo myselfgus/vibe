@@ -106,7 +106,7 @@ export function getTemplatesData(): SecretTemplate[] {
 			displayName: 'xAI API Key',
 			envVarName: 'XAI_API_KEY',
 			provider: 'xai',
-			icon: '🤖',
+icon: '✖️',
 			description: 'xAI Grok API key',
 			instructions: 'Go to xAI Console → API Keys → Create new key',
 			placeholder: 'xai-...',
