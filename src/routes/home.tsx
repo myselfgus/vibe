@@ -16,6 +16,7 @@ import { useDragDrop } from '@/hooks/use-drag-drop';
 import { ImageUploadButton } from '@/components/image-upload-button';
 import { ImageAttachmentPreview } from '@/components/image-attachment-preview';
 import { SUPPORTED_FILE_MIME_TYPES } from '@/api-types';
+import { ParticlesBackground } from '@/components/particles/ParticlesBackground';
 
 export default function Home() {
 	const navigate = useNavigate();
@@ -134,16 +135,8 @@ export default function Home() {
 
 	return (
 		<div className="relative flex flex-col items-center size-full">
-			{/* Static background image */}
-			<div
-				className="fixed inset-0 pointer-events-none opacity-40"
-				style={{
-					backgroundImage: 'url(https://imagedelivery.net/ZSVIzNe6GQZrE_DQQqHAyw/6c9aea3d-c380-4658-ecaa-65d4afe1a100/public)',
-					backgroundSize: 'cover',
-					backgroundPosition: 'center',
-					zIndex: 0
-				}}
-			/>
+			{/* Particles background */}
+			<ParticlesBackground />
 
 			<LayoutGroup>
 				<div className="rounded-md w-full max-w-2xl overflow-hidden">
