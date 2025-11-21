@@ -830,3 +830,241 @@ display: none; /* Chrome, Safari, Opera */
 .prism-transition-fast {
 	transition: all 0.15s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
+
+/* ============================================
+   AURORA BACKGROUND ANIMATIONS
+   Inspired by Eldora UI, adapted for Prism Design System
+   ============================================ */
+
+@keyframes aurora {
+	0%, 100% {
+		transform: translate(0, 0) rotate(0deg) scale(1);
+		opacity: 0.15;
+	}
+	25% {
+		transform: translate(10%, -5%) rotate(5deg) scale(1.1);
+		opacity: 0.25;
+	}
+	50% {
+		transform: translate(-5%, 10%) rotate(-3deg) scale(1.05);
+		opacity: 0.2;
+	}
+	75% {
+		transform: translate(-10%, -10%) rotate(7deg) scale(1.15);
+		opacity: 0.3;
+	}
+}
+
+@keyframes aurora-float-slow {
+	0%, 100% {
+		transform: translate(0, 0) scale(1);
+	}
+	50% {
+		transform: translate(-20px, 20px) scale(1.05);
+	}
+}
+
+@keyframes aurora-float-medium {
+	0%, 100% {
+		transform: translate(0, 0) scale(1);
+	}
+	50% {
+		transform: translate(30px, -15px) scale(1.1);
+	}
+}
+
+@keyframes aurora-float-fast {
+	0%, 100% {
+		transform: translate(0, 0) scale(1);
+	}
+	50% {
+		transform: translate(-15px, -25px) scale(0.95);
+	}
+}
+
+/* Aurora gradient layers - Light Mode */
+.aurora-layer-1 {
+	position: absolute;
+	top: -50%;
+	left: -25%;
+	width: 150%;
+	height: 150%;
+	background: radial-gradient(
+		ellipse at center,
+		hsla(210, 65%, 50%, 0.12) 0%,
+		hsla(185, 45%, 45%, 0.08) 30%,
+		transparent 70%
+	);
+	animation: aurora 12s ease-in-out infinite alternate;
+	filter: blur(40px);
+}
+
+.aurora-layer-2 {
+	position: absolute;
+	top: -30%;
+	right: -25%;
+	width: 120%;
+	height: 120%;
+	background: radial-gradient(
+		ellipse at center,
+		hsla(95, 35%, 48%, 0.1) 0%,
+		hsla(185, 45%, 42%, 0.06) 35%,
+		transparent 70%
+	);
+	animation: aurora 16s ease-in-out infinite alternate-reverse;
+	animation-delay: -2s;
+	filter: blur(50px);
+}
+
+.aurora-layer-3 {
+	position: absolute;
+	bottom: -40%;
+	left: 10%;
+	width: 140%;
+	height: 140%;
+	background: radial-gradient(
+		ellipse at center,
+		hsla(210, 70%, 45%, 0.08) 0%,
+		hsla(95, 40%, 40%, 0.05) 40%,
+		transparent 75%
+	);
+	animation: aurora 20s ease-in-out infinite alternate;
+	animation-delay: -4s;
+	filter: blur(60px);
+}
+
+/* Dark mode adjustments - More vibrant */
+.dark .aurora-layer-1 {
+	background: radial-gradient(
+		ellipse at center,
+		hsla(210, 75%, 55%, 0.18) 0%,
+		hsla(185, 50%, 50%, 0.12) 30%,
+		transparent 70%
+	);
+}
+
+.dark .aurora-layer-2 {
+	background: radial-gradient(
+		ellipse at center,
+		hsla(95, 45%, 52%, 0.15) 0%,
+		hsla(185, 50%, 48%, 0.1) 35%,
+		transparent 70%
+	);
+}
+
+.dark .aurora-layer-3 {
+	background: radial-gradient(
+		ellipse at center,
+		hsla(210, 80%, 50%, 0.12) 0%,
+		hsla(95, 50%, 45%, 0.08) 40%,
+		transparent 75%
+	);
+}
+
+/* Floating animation utilities */
+.animate-aurora-float-slow {
+	animation: aurora-float-slow 15s ease-in-out infinite;
+}
+
+.animate-aurora-float-medium {
+	animation: aurora-float-medium 12s ease-in-out infinite;
+}
+
+.animate-aurora-float-fast {
+	animation: aurora-float-fast 10s ease-in-out infinite;
+}
+
+/* Noise texture for depth */
+.bg-noise {
+	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+	background-repeat: repeat;
+	background-size: 200px 200px;
+}
+
+/* Radial gradient utility */
+.bg-gradient-radial {
+	background-image: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+/* Button hover effects with aurora glow */
+.aurora-button-hover {
+	position: relative;
+	transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.aurora-button-hover::before {
+	content: '';
+	position: absolute;
+	inset: -2px;
+	border-radius: inherit;
+	background: linear-gradient(
+		135deg,
+		hsla(210, 65%, 55%, 0.4),
+		hsla(185, 50%, 50%, 0.3),
+		hsla(95, 45%, 48%, 0.4)
+	);
+	opacity: 0;
+	transition: opacity 0.3s ease-out;
+	z-index: -1;
+	filter: blur(8px);
+}
+
+.aurora-button-hover:hover::before {
+	opacity: 1;
+}
+
+.dark .aurora-button-hover::before {
+	background: linear-gradient(
+		135deg,
+		hsla(210, 75%, 60%, 0.5),
+		hsla(185, 55%, 55%, 0.4),
+		hsla(95, 50%, 52%, 0.5)
+	);
+}
+
+/* Hero form glass effect enhancement */
+.aurora-glass-form {
+	position: relative;
+	background: rgba(255, 255, 255, 0.08);
+	backdrop-filter: blur(16px) saturate(180%);
+	-webkit-backdrop-filter: blur(16px) saturate(180%);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.aurora-glass-form:hover {
+	background: rgba(255, 255, 255, 0.12);
+	border-color: rgba(255, 255, 255, 0.3);
+	box-shadow:
+		0 8px 32px rgba(0, 0, 0, 0.1),
+		0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.dark .aurora-glass-form {
+	background: rgba(0, 0, 0, 0.2);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dark .aurora-glass-form:hover {
+	background: rgba(0, 0, 0, 0.3);
+	border-color: rgba(255, 255, 255, 0.18);
+	box-shadow:
+		0 8px 32px rgba(0, 0, 0, 0.3),
+		0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+	.aurora-layer-1,
+	.aurora-layer-2,
+	.aurora-layer-3,
+	.animate-aurora-float-slow,
+	.animate-aurora-float-medium,
+	.animate-aurora-float-fast {
+		animation: none;
+	}
+
+	.aurora-button-hover::before {
+		transition: none;
+	}
+}

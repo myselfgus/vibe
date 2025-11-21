@@ -41,6 +41,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { sendWebSocketMessage } from './utils/websocket-helpers';
+import BackgroundPaths from '@/components/background-paths';
 
 export default function Chat() {
 	const { chatId: urlChatId } = useParams();
@@ -525,17 +526,18 @@ export default function Chat() {
 	}
 
 	return (
-		<div className="size-full flex flex-col min-h-0 text-text-primary">
-			<div className="flex-1 flex min-h-0 overflow-hidden justify-center">
+		<div className="size-full flex flex-col min-h-0 text-text-primary relative">
+			<BackgroundPaths />
+			<div className="flex-1 flex min-h-0 overflow-hidden justify-center relative z-10">
 				<motion.div
 					layout="position"
-					className="flex-1 shrink-0 flex flex-col basis-0 max-w-lg relative z-10 h-full min-h-0"
+					className="flex-1 shrink-0 flex flex-col basis-0 max-w-lg relative z-10 h-full min-h-0 backdrop-blur-md bg-white/5 dark:bg-black/5 rounded-2xl border border-white/10 dark:border-black/10 shadow-xl m-4"
 				>
-					<div 
+					<div
 					className={clsx(
 						'flex-1 overflow-y-auto min-h-0 chat-messages-scroll',
 						isDebugging && 'animate-debug-pulse'
-					)} 
+					)}
 					ref={messagesContainerRef}
 				>
 						<div className="pt-5 px-4 pb-4 text-sm flex flex-col gap-5">
@@ -718,7 +720,7 @@ export default function Chat() {
 					<form
                         ref={chatFormRef}
                         onSubmit={onNewMessage}
-                        className="shrink-0 p-4 pb-5 bg-transparent"
+                        className="shrink-0 p-4 pb-5"
                         {...chatDragHandlers}
                     >
 					<input
@@ -845,14 +847,14 @@ export default function Chat() {
 					{showMainView && (
 					<motion.div
 						layout="position"
-						className="flex-1 flex shrink-0 basis-0 p-4 pl-0 ml-2 z-30 min-h-0"
+						className="flex-1 flex shrink-0 basis-0 p-4 pl-0 ml-2 z-30 min-h-0 backdrop-blur-md bg-white/5 dark:bg-black/5 rounded-2xl border border-white/10 dark:border-black/10 shadow-xl mr-4 my-4"
 						initial={{ opacity: 0, scale: 0.84 }}
 						animate={{ opacity: 1, scale: 1 }}
 						transition={{ duration: 0.3, ease: 'easeInOut' }}
 					>
 							{view === 'preview' && previewUrl && (
-								<div className="flex-1 flex flex-col bg-bg-3 rounded-xl shadow-md shadow-bg-2 overflow-hidden border border-border-primary">
-									<div className="grid grid-cols-3 px-2 h-10 border-b bg-bg-2">
+								<div className="flex-1 flex flex-col bg-transparent rounded-xl overflow-hidden">
+									<div className="grid grid-cols-3 px-2 h-10 border-b border-white/10 dark:border-black/10 bg-white/5 dark:bg-black/5 backdrop-blur-sm">
 										<div className="flex items-center">
 											<ViewModeSwitch
 												view={view}
@@ -966,9 +968,9 @@ export default function Chat() {
 							)}
 
 							{view === 'blueprint' && (
-								<div className="flex-1 flex flex-col bg-bg-3 rounded-xl shadow-md shadow-bg-2 overflow-hidden border border-border-primary">
+								<div className="flex-1 flex flex-col bg-transparent rounded-xl overflow-hidden">
 									{/* Toolbar */}
-									<div className="grid grid-cols-3 px-2 h-10 bg-bg-2 border-b">
+									<div className="grid grid-cols-3 px-2 h-10 border-b border-white/10 dark:border-black/10 bg-white/5 dark:bg-black/5 backdrop-blur-sm">
 										<div className="flex items-center">
 											<ViewModeSwitch
 												view={view}
@@ -993,7 +995,7 @@ export default function Chat() {
 											{/* Right side - can add actions here if needed */}
 										</div>
 									</div>
-									<div className="flex-1 overflow-y-auto bg-bg-3">
+									<div className="flex-1 overflow-y-auto bg-transparent">
 										<div className="py-12 mx-auto">
 											<Blueprint
 												blueprint={
@@ -1079,9 +1081,9 @@ export default function Chat() {
 							)} */}
 
 							{view === 'editor' && (
-								<div className="flex-1 flex flex-col bg-bg-3 rounded-xl shadow-md shadow-bg-2 overflow-hidden border border-border-primary">
+								<div className="flex-1 flex flex-col bg-transparent rounded-xl overflow-hidden">
 									{activeFile && (
-										<div className="grid grid-cols-3 px-2 h-10 bg-bg-2 border-b">
+										<div className="grid grid-cols-3 px-2 h-10 border-b border-white/10 dark:border-black/10 bg-white/5 dark:bg-black/5 backdrop-blur-sm">
 											<div className="flex items-center">
 												<ViewModeSwitch
 													view={view}

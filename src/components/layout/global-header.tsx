@@ -1,18 +1,15 @@
 import { useEffect, useState } from 'react';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { AuthButton } from '../auth/auth-button';
 import { ThemeToggle } from '../theme-toggle';
 import { motion } from 'framer-motion';
-import { useAuth } from '@/contexts/auth-context';
 import { ChevronRight, AlertCircle } from 'lucide-react';
 import { usePlatformStatus } from '@/hooks/use-platform-status';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useLocation } from 'react-router';
+import { useLocation, Link } from 'react-router';
 import clsx from 'clsx';
 
 export function GlobalHeader() {
-	const { user } = useAuth();
 	const { status } = usePlatformStatus();
 	const [isChangelogOpen, setIsChangelogOpen] = useState(false);
 	const hasMaintenanceMessage = Boolean(status.hasActiveMessage && status.globalUserMessage.trim().length > 0);
@@ -39,38 +36,33 @@ export function GlobalHeader() {
 
 					{/* Main content */}
 					<div className="relative z-10 grid grid-cols-[auto_1fr_auto] items-center gap-4 px-5 py-2">
-						{/* Left section */}
-						{user ? (
-							<motion.div
-								whileTap={{ scale: 0.95 }}
-								transition={{
-									type: 'spring',
-									stiffness: 400,
-									damping: 17,
-								}}
-								className='flex items-center'
-							>
-								<SidebarTrigger className="h-8 w-8 text-foreground rounded-md hover:bg-muted prism-transition transition-colors duration-200" />
-								<span className="font-josefin font-extrabold text-2xl text-foreground ml-3 tracking-tight">
-									C2C
-								</span>
-								{hasMaintenanceMessage && (
-									<button
-										type="button"
-										onClick={hasChangeLogs ? () => setIsChangelogOpen(true) : undefined}
-										disabled={!hasChangeLogs}
-										className={`flex max-w-full items-center gap-2 rounded-full border border-border-primary bg-card/80 px-3 ml-4 py-1.5 text-xs text-foreground shadow-metallic backdrop-blur prism-transition hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/40 md:text-sm${!hasChangeLogs ? ' opacity-50 cursor-not-allowed pointer-events-none' : ''}`}
-										aria-label="Platform updates"
-									>
-										<AlertCircle className="h-4 w-4 text-accent" />
-										<span className="truncate max-w-[46ch] md:max-w-[60ch]">{status.globalUserMessage}</span>
-										<ChevronRight className="ml-1 h-4 w-4 text-accent" />
-									</button>
-								)}
-							</motion.div>
-						) : (
-							<div></div>
-						)}
+						{/* Left section - Logo */}
+						<motion.div
+							whileTap={{ scale: 0.95 }}
+							transition={{
+								type: 'spring',
+								stiffness: 400,
+								damping: 17,
+							}}
+							className='flex items-center'
+						>
+							<Link to="/" className="font-josefin font-extrabold text-2xl text-foreground tracking-tight hover:opacity-80 transition-opacity">
+								C2C
+							</Link>
+							{hasMaintenanceMessage && (
+								<button
+									type="button"
+									onClick={hasChangeLogs ? () => setIsChangelogOpen(true) : undefined}
+									disabled={!hasChangeLogs}
+									className={`flex max-w-full items-center gap-2 rounded-full border border-white/20 dark:border-white/10 bg-white/10 dark:bg-black/10 px-3 ml-4 py-1.5 text-xs text-foreground backdrop-blur-md prism-transition hover:bg-white/20 dark:hover:bg-black/20 focus:outline-none focus:ring-2 focus:ring-accent/40 md:text-sm${!hasChangeLogs ? ' opacity-50 cursor-not-allowed pointer-events-none' : ''}`}
+									aria-label="Platform updates"
+								>
+									<AlertCircle className="h-4 w-4 text-accent" />
+									<span className="truncate max-w-[46ch] md:max-w-[60ch]">{status.globalUserMessage}</span>
+									<ChevronRight className="ml-1 h-4 w-4 text-accent" />
+								</button>
+							)}
+						</motion.div>
 
 
 
