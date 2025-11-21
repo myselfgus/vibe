@@ -656,36 +656,123 @@ display: none; /* Chrome, Safari, Opera */
 
 /* === PRISM COMPONENT COMBINATIONS === */
 .prism-card {
-	@apply neomorph-card metallic-sheen;
+	background: hsl(var(--card));
+	box-shadow: var(--shadow-neomorph);
+	border-radius: var(--radius);
+	transition: all 0.3s ease-out;
+	position: relative;
+	overflow: hidden;
+}
+
+.prism-card:hover {
+	box-shadow: var(--shadow-metallic-strong);
+}
+
+.prism-card::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(30, 58, 95, 0.1),
+		rgba(85, 107, 47, 0.08),
+		transparent
+	);
+	transition: left 0.5s ease-out;
+}
+
+.prism-card:hover::before {
+	left: 100%;
+}
+
+.dark .prism-card::before {
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(30, 93, 189, 0.15),
+		rgba(124, 179, 66, 0.12),
+		transparent
+	);
 }
 
 .prism-card-glass {
-	@apply glass shadow-metallic rounded-[1.25rem] p-6;
+	background: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	box-shadow: var(--shadow-metallic);
+	border-radius: 1.25rem;
+	padding: 1.5rem;
+}
+
+.dark .prism-card-glass {
+	background: rgba(0, 0, 0, 0.2);
+	border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .prism-button-primary {
-	@apply neomorph-button iridescent-glow-hover;
 	background: hsl(var(--primary));
 	color: hsl(var(--primary-foreground));
+	box-shadow: var(--shadow-neomorph);
+	border-radius: var(--radius);
+	transition: all 0.15s ease-out;
+}
+
+.prism-button-primary:hover {
+	box-shadow:
+		0 0 30px rgba(30, 58, 95, 0.3),
+		0 0 15px rgba(85, 107, 47, 0.25),
+		0 4px 16px rgba(30, 58, 95, 0.2);
+}
+
+.dark .prism-button-primary:hover {
+	box-shadow:
+		0 0 30px rgba(30, 93, 189, 0.4),
+		0 0 15px rgba(124, 179, 66, 0.3),
+		0 4px 16px rgba(30, 93, 189, 0.3);
 }
 
 .prism-button-secondary {
-	@apply neomorph-button;
 	background: hsl(var(--secondary));
 	color: hsl(var(--secondary-foreground));
+	box-shadow: var(--shadow-neomorph);
+	border-radius: var(--radius);
+	transition: all 0.15s ease-out;
+}
+
+.prism-button-secondary:hover {
+	box-shadow: var(--shadow-neomorph-flat);
+}
+
+.prism-button-secondary:active {
+	box-shadow: var(--shadow-neomorph-inset);
 }
 
 .prism-badge-success {
-	@apply rounded-full px-3 py-1;
+	border-radius: 9999px;
+	padding: 0.25rem 0.75rem;
 	background: hsl(var(--success));
 	color: hsl(var(--success-foreground));
 	box-shadow: var(--shadow-neomorph-flat);
 }
 
 .prism-input {
-	@apply neomorph-input w-full px-4 py-2;
+	width: 100%;
+	padding: 0.5rem 1rem;
+	background: hsl(var(--input));
+	box-shadow: var(--shadow-neomorph-inset);
+	border-radius: calc(var(--radius) - 0.25rem);
+	transition: all 0.2s ease-out;
 	color: hsl(var(--foreground));
 	border: 1px solid hsl(var(--border));
+}
+
+.prism-input:focus {
+	box-shadow: var(--shadow-neomorph-inset), 0 0 0 2px hsl(var(--ring));
 }
 
 /* === ANIMATION UTILITIES === */
