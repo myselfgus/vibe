@@ -15,7 +15,7 @@ import { useImageUpload } from '@/hooks/use-image-upload';
 import { useDragDrop } from '@/hooks/use-drag-drop';
 import { ImageUploadButton } from '@/components/image-upload-button';
 import { ImageAttachmentPreview } from '@/components/image-attachment-preview';
-import { SUPPORTED_IMAGE_MIME_TYPES } from '@/api-types';
+import { SUPPORTED_FILE_MIME_TYPES } from '@/api-types';
 
 export default function Home() {
 	const navigate = useNavigate();
@@ -34,7 +34,7 @@ export default function Home() {
 
 	const { isDragging, dragHandlers } = useDragDrop({
 		onFilesDropped: addImages,
-		accept: [...SUPPORTED_IMAGE_MIME_TYPES],
+		accept: [...SUPPORTED_FILE_MIME_TYPES],
 	});
 
 

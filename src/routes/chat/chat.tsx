@@ -21,7 +21,7 @@ import { ViewModeSwitch } from './components/view-mode-switch';
 import { DebugPanel, type DebugMessage } from './components/debug-panel';
 import { DeploymentControls } from './components/deployment-controls';
 import { useChat, type FileType } from './hooks/use-chat';
-import { type ModelConfigsData, type BlueprintType, SUPPORTED_IMAGE_MIME_TYPES } from '@/api-types';
+import { type ModelConfigsData, type BlueprintType, SUPPORTED_FILE_MIME_TYPES } from '@/api-types';
 import { Copy } from './components/copy';
 import { useFileContentStream } from './hooks/use-file-content-stream';
 import { logger } from '@/utils/logger';
@@ -454,7 +454,7 @@ export default function Chat() {
 	const chatFormRef = useRef<HTMLFormElement>(null);
 	const { isDragging: isChatDragging, dragHandlers: chatDragHandlers } = useDragDrop({
 		onFilesDropped: addImages,
-		accept: [...SUPPORTED_IMAGE_MIME_TYPES],
+		accept: [...SUPPORTED_FILE_MIME_TYPES],
 		disabled: isChatDisabled,
 	});
 
@@ -724,7 +724,7 @@ export default function Chat() {
 					<input
 						ref={imageInputRef}
 						type="file"
-						accept={SUPPORTED_IMAGE_MIME_TYPES.join(',')}
+						accept={SUPPORTED_FILE_MIME_TYPES.join(',')}
 						multiple
 						onChange={(e) => {
 							const files = Array.from(e.target.files || []);

@@ -8,7 +8,17 @@ export const SUPPORTED_IMAGE_MIME_TYPES = [
 	'image/webp',
 ] as const;
 
+/**
+ * Supported file MIME types for upload (includes images and text files)
+ */
+export const SUPPORTED_FILE_MIME_TYPES = [
+	...SUPPORTED_IMAGE_MIME_TYPES,
+	'text/plain',
+	'text/markdown',
+] as const;
+
 export type SupportedImageMimeType = typeof SUPPORTED_IMAGE_MIME_TYPES[number];
+export type SupportedFileMimeType = typeof SUPPORTED_FILE_MIME_TYPES[number];
 
 /**
  * Image attachment for user messages
@@ -46,10 +56,17 @@ export interface ProcessedImageAttachment {
 }
 
 /**
- * Utility to check if a MIME type is supported
+ * Utility to check if a MIME type is supported (image)
  */
 export function isSupportedImageType(mimeType: string): mimeType is SupportedImageMimeType {
 	return SUPPORTED_IMAGE_MIME_TYPES.includes(mimeType as SupportedImageMimeType);
+}
+
+/**
+ * Utility to check if a MIME type is supported (any file)
+ */
+export function isSupportedFileType(mimeType: string): mimeType is SupportedFileMimeType {
+	return SUPPORTED_FILE_MIME_TYPES.includes(mimeType as SupportedFileMimeType);
 }
 
 /**
