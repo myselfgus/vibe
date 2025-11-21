@@ -12,9 +12,9 @@ export function AnimatedBackground({
 	speed = 0.0005
 }: AnimatedBackgroundProps) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const animationFrameRef = useRef<number>();
+	const animationFrameRef = useRef<number | undefined>(undefined);
 	const startTimeRef = useRef<number>(Date.now());
-	const imageRef = useRef<HTMLImageElement>();
+	const imageRef = useRef<HTMLImageElement | undefined>(undefined);
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
