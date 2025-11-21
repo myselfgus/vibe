@@ -178,7 +178,7 @@ icon: '✖️',
 			displayName: 'xAI (BYOK)',
 			envVarName: 'XAI_API_KEY_BYOK',
 			provider: 'xai',
-			icon: '🤖',
+icon: '✖️',
 			description:
 				'Use your xAI API key for Grok models via Cloudflare AI Gateway',
 			instructions: 'Go to xAI Console → API Keys → Create new key',
