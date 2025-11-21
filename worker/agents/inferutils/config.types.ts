@@ -27,8 +27,8 @@ export enum AIModels {
 	CLAUDE_3_5_SONNET_LATEST = 'anthropic/claude-3-5-sonnet-latest',
 	CLAUDE_3_7_SONNET_20250219 = 'anthropic/claude-3-7-sonnet-20250219',
 	CLAUDE_OPUS_4_1 = 'anthropic/claude-opus-4.1',
-	CLAUDE_SONNET_4_5 = 'anthropic/claude-sonnet-4.5',
-	CLAUDE_HAIKU_4_5 = 'anthropic/claude-haiku-4.5',
+	CLAUDE_SONNET_4_5 = 'anthropic/claude-sonnet-4-5-20250929',
+	CLAUDE_HAIKU_4_5 = 'anthropic/claude-haiku-4-5-20251001',
 
 	XAI_GROK_4 = 'xai/grok-4',
 	XAI_GROK_4_1 = 'xai/grok-4.1',

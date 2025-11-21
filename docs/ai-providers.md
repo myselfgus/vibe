@@ -66,8 +66,9 @@ export enum AIModels {
     // Anthropic (Claude)
     CLAUDE_3_5_SONNET_LATEST = 'anthropic/claude-3-5-sonnet-latest',
     CLAUDE_3_7_SONNET_20250219 = 'anthropic/claude-3-7-sonnet-20250219',
-    CLAUDE_4_OPUS = 'anthropic/claude-opus-4-20250514',
-    CLAUDE_4_SONNET = 'anthropic/claude-sonnet-4-20250514',
+    CLAUDE_OPUS_4_1 = 'anthropic/claude-opus-4.1',
+    CLAUDE_SONNET_4_5 = 'anthropic/claude-sonnet-4-5-20250929',
+    CLAUDE_HAIKU_4_5 = 'anthropic/claude-haiku-4-5-20251001',
 
     // xAI (Grok)
     XAI_GROK_2_LATEST = 'xai/grok-2-latest',
@@ -221,8 +222,9 @@ async function getConfigurationForModel(model: AIModels, env: Env, userId: strin
 ### Anthropic (Claude)
 - `claude-3-5-sonnet-latest` - Latest Claude 3.5 Sonnet
 - `claude-3-7-sonnet-20250219` - Claude 3.7 Sonnet (specific version)
-- `claude-opus-4-20250514` - Claude Opus 4
-- `claude-sonnet-4-20250514` - Claude Sonnet 4
+- `claude-opus-4.1` - Claude Opus 4.1
+- `claude-sonnet-4-5-20250929` - Claude Sonnet 4.5 (September 2025)
+- `claude-haiku-4-5-20251001` - Claude Haiku 4.5 (October 2025)
 
 ### Google AI Studio (Gemini)
 - `gemini-2.5-pro` - Pro model with advanced reasoning
