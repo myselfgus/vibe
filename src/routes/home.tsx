@@ -158,7 +158,7 @@ export default function Home() {
 								const query = textareaRef.current!.value;
 								handleCreateApp(query, agentMode);
 							}}
-							className="flex z-10 flex-col w-full min-h-[150px] bg-card/80 glass rounded-[20px] shadow-metallic p-5 prism-transition"
+							className="flex z-10 flex-col w-full min-h-[150px] bg-card/5 backdrop-blur-xl border border-white/20 rounded-[20px] shadow-[0_8px_32px_rgba(0,0,0,0.1)] p-5 prism-transition"
 						>
 							<div 
 								className={clsx(
