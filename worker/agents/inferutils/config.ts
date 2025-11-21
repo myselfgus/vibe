@@ -71,14 +71,14 @@ export const AGENT_CONFIG: AgentConfig = {
     templateSelection: {
         name: AIModels.GEMINI_2_5_FLASH_LITE,
         max_tokens: 2000,
-        fallbackModel: AIModels.GEMINI_2_5_FLASH,
+        fallbackModel: AIModels.CLAUDE_HAIKU_4_5,
         temperature: 0.6,
     },
     blueprint: {
         name: AIModels.GEMINI_2_5_PRO,
         reasoning_effort: 'medium',
         max_tokens: 64000,
-        fallbackModel: AIModels.GEMINI_2_5_FLASH,
+        fallbackModel: AIModels.CLAUDE_SONNET_4_5,
         temperature: 0.7,
     },
     projectSetup: {
@@ -86,35 +86,35 @@ export const AGENT_CONFIG: AgentConfig = {
         reasoning_effort: 'low',
         max_tokens: 10000,
         temperature: 0.2,
-        fallbackModel: AIModels.GEMINI_2_5_PRO,
+        fallbackModel: AIModels.CLAUDE_SONNET_4_5,
     },
     phaseGeneration: {
         name: AIModels.GEMINI_2_5_PRO,
         reasoning_effort: 'low',
         max_tokens: 32000,
         temperature: 0.2,
-        fallbackModel: AIModels.GEMINI_2_5_FLASH,
+        fallbackModel: AIModels.CLAUDE_SONNET_4_5,
     },
     firstPhaseImplementation: {
         name: AIModels.GEMINI_2_5_PRO,
         reasoning_effort: 'low',
         max_tokens: 64000,
         temperature: 0.2,
-        fallbackModel: AIModels.GEMINI_2_5_PRO,
+        fallbackModel: AIModels.CLAUDE_SONNET_4_5,
     },
     phaseImplementation: {
         name: AIModels.GEMINI_2_5_PRO,
         reasoning_effort: 'low',
         max_tokens: 64000,
         temperature: 0.2,
-        fallbackModel: AIModels.GEMINI_2_5_PRO,
+        fallbackModel: AIModels.CLAUDE_SONNET_4_5,
     },
     realtimeCodeFixer: {
         name: AIModels.DISABLED,
         reasoning_effort: 'low',
         max_tokens: 32000,
         temperature: 1,
-        fallbackModel: AIModels.GEMINI_2_5_FLASH,
+        fallbackModel: AIModels.CLAUDE_HAIKU_4_5,
     },
     // Not used right now
     fastCodeFixer: {
@@ -122,35 +122,35 @@ export const AGENT_CONFIG: AgentConfig = {
         reasoning_effort: undefined,
         max_tokens: 64000,
         temperature: 0.0,
-        fallbackModel: AIModels.GEMINI_2_5_PRO,
+        fallbackModel: AIModels.CLAUDE_SONNET_4_5,
     },
     conversationalResponse: {
         name: AIModels.GEMINI_2_5_FLASH,
         reasoning_effort: 'low',
         max_tokens: 4000,
         temperature: 0,
-        fallbackModel: AIModels.GEMINI_2_5_PRO,
+        fallbackModel: AIModels.CLAUDE_HAIKU_4_5,
     },
     deepDebugger: {
         name: AIModels.GEMINI_2_5_PRO,
         reasoning_effort: 'high',
         max_tokens: 8000,
         temperature: 0.5,
-        fallbackModel: AIModels.GEMINI_2_5_FLASH,
+        fallbackModel: AIModels.CLAUDE_SONNET_4_5,
     },
     codeReview: {
         name: AIModels.GEMINI_2_5_PRO,
         reasoning_effort: 'medium',
         max_tokens: 32000,
         temperature: 0.1,
-        fallbackModel: AIModels.GEMINI_2_5_FLASH,
+        fallbackModel: AIModels.CLAUDE_SONNET_4_5,
     },
     fileRegeneration: {
         name: AIModels.GEMINI_2_5_PRO,
         reasoning_effort: 'low',
         max_tokens: 32000,
         temperature: 0,
-        fallbackModel: AIModels.GEMINI_2_5_FLASH,
+        fallbackModel: AIModels.CLAUDE_SONNET_4_5,
     },
     // Not used right now
     screenshotAnalysis: {
@@ -158,7 +158,7 @@ export const AGENT_CONFIG: AgentConfig = {
         reasoning_effort: 'medium',
         max_tokens: 8000,
         temperature: 0.1,
-        fallbackModel: AIModels.GEMINI_2_5_FLASH,
+        fallbackModel: AIModels.CLAUDE_SONNET_4_5,
     },
 };
 

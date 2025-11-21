@@ -173,10 +173,10 @@ export class ModelTestService extends BaseService {
     private getTestModelForProvider(provider: string): string | null {
         const testModels: Record<string, string> = {
             'openai': AIModels.OPENAI_5_MINI,
-            'anthropic': AIModels.CLAUDE_4_SONNET,
+            'anthropic': AIModels.CLAUDE_SONNET_4_5,
             'google-ai-studio': AIModels.GEMINI_2_5_FLASH,
             'gemini': AIModels.GEMINI_2_5_FLASH,
-            // 'openrouter': AIModels.OPENROUTER_QWEN_3_CODER, // Removed - not available
+            'xai': AIModels.XAI_GROK_4_1_FAST,
             'cerebras': AIModels.CEREBRAS_GPT_OSS
         };
 
