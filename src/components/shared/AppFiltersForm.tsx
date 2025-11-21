@@ -44,13 +44,13 @@ export const AppFiltersForm: React.FC<AppFiltersFormProps> = ({
     <div className={`max-w-4xl mb-8 ${className}`}>
       <form onSubmit={onSearchSubmit} className="flex gap-2 mb-4">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-tertiary" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
             placeholder={searchPlaceholder}
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-10 bg-bg-4 w-90"
+            className="pl-10 prism-input w-90"
           />
         </div>
         

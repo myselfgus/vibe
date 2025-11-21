@@ -109,7 +109,7 @@ function AppMenuItem({
 							)}
 
 							<div className="relative flex-1 min-w-0 overflow-hidden">
-								<span className="font-medium flex justify-start  items-center  gap-2 text-text-primary/80 whitespace-nowrap">
+								<span className="font-medium flex justify-start  items-center  gap-2 text-foreground/80 whitespace-nowrap">
 									<span className="text-ellipsis w-fit overflow-hidden">
 										{app.title}{' '}
 									</span>
@@ -118,10 +118,10 @@ function AppMenuItem({
 									</div>
 								</span>
 
-								<div className="absolute inset-y-0 right-0 w-4 bg-gradient-to-l from-bg-2 to-transparent pointer-events-none" />
+								<div className="absolute inset-y-0 right-0 w-4 bg-gradient-to-l from-card to-transparent pointer-events-none" />
 							</div>
 						</div>
-						<p className="text-xs text-text-tertiary truncate">
+						<p className="text-xs text-muted-foreground truncate">
 							{formatTimestamp()}
 						</p>
 					</div>
@@ -203,7 +203,7 @@ export function AppSidebar() {
 			<Sidebar
 				collapsible="icon"
 				className={cn(
-					'bg-bg-2 transition-all duration-300 ease-in-out',
+					'bg-card shadow-neomorph-flat transition-all duration-300 ease-in-out',
 				)}
 			>
 				<SidebarContent className="mt-2">
@@ -222,7 +222,7 @@ export function AppSidebar() {
 											<TooltipTrigger asChild>
 												<button
 													className={cn(
-														'group flex w-full border-[0.5px] border-bg-2 items-center gap-2 font-medium hover:opacity-80 hover:cursor-pointer p-2 rounded-md cursor-hand text-text-secondary hover:text-text-primary',
+														'group flex w-full border-[0.5px] border-border items-center gap-2 font-medium hover:opacity-80 hover:cursor-pointer p-2 rounded-xl cursor-hand shadow-metallic iridescent-glow-hover prism-transition',
 														isCollapsed
 															? 'justify-center bg-accent'
 															: 'justify-start bg-accent',
@@ -253,14 +253,14 @@ export function AppSidebar() {
 					{!isCollapsed && (
 						<ScrollArea className="flex-1 px-1 relative">
 							{/* Gradient fade overlay for app names at sidebar edge */}
-							<div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-bg-2 to-transparent pointer-events-none z-10"></div>
+							<div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-card to-transparent pointer-events-none z-10"></div>
 							{/* Navigation */}
 							<SidebarGroup>
 								{expandedGroups.includes('apps') && (
 									<SidebarGroupContent>
 										{/* Search */}
-										<div className="relative bg-bg-3 mb-4 mt-2">
-											<Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-text-tertiary" />
+										<div className="relative mb-4 mt-2">
+											<Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
 											<Input
 												placeholder="Search apps..."
 												value={searchQuery}
@@ -279,7 +279,7 @@ export function AppSidebar() {
 													{allAppsLoading ? (
 														<SidebarMenuItem>
 															<div className="flex items-center justify-center py-4">
-																<div className="text-sm text-text-tertiary">
+																<div className="text-sm text-muted-foreground">
 																	Searching...
 																</div>
 															</div>
@@ -288,7 +288,7 @@ export function AppSidebar() {
 													  0 ? (
 														<>
 															<SidebarMenuItem>
-																<div className="px-2 py-1 text-xs text-text-tertiary">
+																<div className="px-2 py-1 text-xs text-muted-foreground">
 																	Found{' '}
 																	{
 																		searchResults.length
@@ -333,7 +333,7 @@ export function AppSidebar() {
 													) : (
 														<SidebarMenuItem>
 															<div className="flex items-center justify-center py-4">
-																<div className="text-sm text-text-tertiary">
+																<div className="text-sm text-muted-foreground">
 																	No apps
 																	found for "
 																	{
@@ -376,11 +376,11 @@ export function AppSidebar() {
 																	)
 																}
 																tooltip="View all apps"
-																className="text-text-tertiary hover:text-text-primary view-all-button"
+																className="text-muted-foreground hover:text-foreground view-all-button prism-transition"
 															>
 																<ChevronRight className="h-4 w-4" />
 																{!isCollapsed && (
-																	<span className="font-medium text-text-primary/80">
+																	<span className="font-medium text-foreground/80">
 																		View all
 																		apps →
 																	</span>
@@ -402,7 +402,7 @@ export function AppSidebar() {
 									<SidebarGroup className='mt-4'>
 										<SidebarGroupLabel
 											className={cn(
-												'flex items-center gap-2 text-md text-text-primary',
+												'flex items-center gap-2 text-md text-foreground',
 												isCollapsed &&
 													'justify-center px-0',
 											)}
@@ -444,7 +444,7 @@ export function AppSidebar() {
 									<SidebarGroup>
 										<SidebarGroupLabel
 											className={cn(
-												'flex items-center cursor-pointer hover:text-text-primary transition-colors',
+												'flex items-center cursor-pointer hover:text-foreground prism-transition',
 												isCollapsed
 													? 'justify-center px-0'
 													: 'justify-between',
@@ -522,7 +522,7 @@ export function AppSidebar() {
 																				board.name
 																			}
 																		</p>
-																		<p className="text-xs text-text-tertiary truncate">
+																		<p className="text-xs text-muted-foreground truncate">
 																			{
 																				board.memberCount
 																			}{' '}
@@ -546,11 +546,11 @@ export function AppSidebar() {
 																)
 															}
 															tooltip="Browse all boards"
-															className="text-text-tertiary hover:text-text-primary view-all-button"
+															className="text-muted-foreground hover:text-foreground view-all-button prism-transition"
 														>
 															<Plus className="h-4 w-4" />
 															{!isCollapsed && (
-																<span className="font-medium text-text-primary/80 ml-2">
+																<span className="font-medium text-foreground/80 ml-2">
 																	Browse all
 																	boards
 																</span>
@@ -575,11 +575,11 @@ export function AppSidebar() {
 									id="discover-link"
 									onClick={() => navigate('/discover')}
 									tooltip="Discover"
-									className="group hover:opacity-80 hover:cursor-pointer hover:bg-bg-1/50 transition-all duration-200"
+									className="group hover:opacity-80 hover:cursor-pointer hover:bg-muted/50 prism-transition"
 								>
-									<Compass className="h-6 w-6 text-text-primary/60 group-hover:text-primary/80 transition-colors" />
+									<Compass className="h-6 w-6 text-foreground/60 group-hover:text-primary/80 prism-transition" />
 									{!isCollapsed && (
-										<span className="text-text-primary/80 font-medium group-hover:text-primary transition-colors">
+										<span className="text-foreground/80 font-medium group-hover:text-primary prism-transition">
 											Discover
 										</span>
 									)}
@@ -589,11 +589,11 @@ export function AppSidebar() {
 								<SidebarMenuButton
 									onClick={() => navigate('/settings')}
 									tooltip="Settings"
-									className="group hover:opacity-80 hover:cursor-pointer hover:bg-bg-1/50 transition-all duration-200"
+									className="group hover:opacity-80 hover:cursor-pointer hover:bg-muted/50 prism-transition"
 								>
-									<Settings className="h-6 w-6 text-text-primary/60 group-hover:text-primary/80 transition-colors" />
+									<Settings className="h-6 w-6 text-foreground/60 group-hover:text-primary/80 prism-transition" />
 									{!isCollapsed && (
-										<span className="font-medium text-text-primary/80 group-hover:text-primary transition-colors">
+										<span className="font-medium text-foreground/80 group-hover:text-primary prism-transition">
 											Settings
 										</span>
 									)}

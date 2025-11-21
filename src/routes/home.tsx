@@ -170,7 +170,7 @@ export default function Home() {
 							"px-6 p-8 flex flex-col items-center z-10",
 							discoverReady ? "mt-48" : "mt-[20vh] sm:mt-[24vh] md:mt-[28vh]"
 						)}>
-						<h1 className="text-shadow-sm text-shadow-red-200 dark:text-shadow-red-900 text-accent leading-[1.1] tracking-tight text-5xl w-full mb-4 bg-clip-text bg-gradient-to-r from-text-primary to-text-primary/90" style={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 800 }}>
+						<h1 className="text-shadow-sm text-shadow-red-200 dark:text-shadow-red-900 text-accent iridescent-text leading-[1.1] tracking-tight text-5xl w-full mb-4" style={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 800 }}>
 							CONCEPT2CODE
 						</h1>
 
@@ -181,7 +181,7 @@ export default function Home() {
 								const query = textareaRef.current!.value;
 								handleCreateApp(query, agentMode);
 							}}
-							className="flex z-10 flex-col w-full min-h-[150px] bg-bg-4 border border-accent/30 dark:border-accent/50 dark:bg-bg-2 rounded-[18px] shadow-textarea p-5 transition-all duration-200"
+							className="flex z-10 flex-col w-full min-h-[150px] bg-card/80 glass border iridescent-border rounded-[20px] shadow-metallic p-5 prism-transition"
 						>
 							<div 
 								className={clsx(
@@ -196,7 +196,7 @@ export default function Home() {
 									</div>
 								)}
 								<textarea
-									className="w-full resize-none ring-0 z-20 outline-0 placeholder:text-text-primary/60 text-text-primary"
+									className="w-full resize-none ring-0 z-20 outline-0 placeholder:text-foreground/60 text-foreground bg-transparent"
 									name="query"
 									value={query}
 									placeholder={`Create a ${currentPlaceholderText}`}
@@ -242,7 +242,7 @@ export default function Home() {
 								<button
 									type="submit"
 									disabled={!query.trim()}
-									className="bg-accent text-white p-1 rounded-md *:size-5 transition-all duration-200 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+									className="bg-accent text-white p-1 rounded-xl *:size-5 iridescent-glow-hover prism-transition hover:shadow-metallic disabled:opacity-50 disabled:cursor-not-allowed"
 								>
 									<ArrowRight />
 								</button>
@@ -261,10 +261,10 @@ export default function Home() {
 							exit={{ opacity: 0, y: -10 }}
 							className="w-full max-w-2xl px-6"
 						>
-							<div className="flex items-start gap-2 px-4 py-3 rounded-xl bg-bg-4/50 dark:bg-bg-2/50 border border-accent/20 dark:border-accent/30 shadow-sm">
+							<div className="flex items-start gap-2 px-4 py-3 rounded-xl bg-card/50 glass-light border iridescent-border shadow-neomorph-flat">
 								<Info className="size-4 text-accent flex-shrink-0 mt-0.5" />
-								<p className="text-xs text-text-tertiary leading-relaxed">
-									<span className="font-medium text-text-secondary">Images Beta:</span> Images guide app layout and design but may not be replicated exactly. The coding agent cannot access images directly for app assets.
+								<p className="text-xs text-muted-foreground leading-relaxed">
+									<span className="font-medium text-foreground/80">Images Beta:</span> Images guide app layout and design but may not be replicated exactly. The coding agent cannot access images directly for app assets.
 								</p>
 							</div>
 						</motion.div>
@@ -283,8 +283,8 @@ export default function Home() {
 							className={clsx('max-w-6xl mx-auto px-4 z-10', images.length > 0 ? 'mt-10' : 'mt-16 mb-8')}
 						>
 							<div className='flex flex-col items-start'>
-								<h2 className="text-2xl font-medium text-text-secondary/80">Discover Apps built by the community</h2>
-								<div ref={discoverLinkRef} className="text-md font-light mb-4 text-text-tertiary hover:underline underline-offset-4 select-text cursor-pointer" onClick={() => navigate('/discover')} >View All</div>
+								<h2 className="text-2xl font-medium text-foreground/80">Discover Apps built by the community</h2>
+								<div ref={discoverLinkRef} className="text-md font-light mb-4 text-muted-foreground hover:text-primary hover:underline underline-offset-4 select-text cursor-pointer prism-transition" onClick={() => navigate('/discover')} >View All</div>
 								<motion.div
 									layout
 									transition={{ duration: 0.4 }}

@@ -32,7 +32,7 @@ export function GlobalHeader() {
 				initial={{ y: -10, opacity: 0 }}
 				animate={{ y: 0, opacity: 1 }}
 				transition={{ duration: 0.2, ease: 'easeOut' }}
-				className={clsx("sticky top-0 z-50", pathname !== "/" && "bg-bg-3")}
+				className={clsx("sticky top-0 z-50", pathname !== "/" && "bg-background/80 backdrop-blur-md glass-border")}
 			>
 				<div className="relative">
 					{/* Subtle gradient accent */}
@@ -51,7 +51,7 @@ export function GlobalHeader() {
 								}}
 								className='flex items-center'
 							>
-								<SidebarTrigger className="h-8 w-8 text-text-primary rounded-md hover:bg-orange-50/40 transition-colors duration-200" />
+								<SidebarTrigger className="h-8 w-8 text-foreground rounded-md hover:bg-muted prism-transition transition-colors duration-200" />
 								<CloudflareLogo
 									className="flex-shrink-0 mx-auto transition-all duration-300"
 									style={{
@@ -65,7 +65,7 @@ export function GlobalHeader() {
 										type="button"
 										onClick={hasChangeLogs ? () => setIsChangelogOpen(true) : undefined}
 										disabled={!hasChangeLogs}
-										className={`flex max-w-full items-center gap-2 rounded-full border border-accent/40 bg-bg-4/80 px-3 ml-4 py-1.5 text-xs text-text-primary shadow-sm backdrop-blur transition-colors hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/40 dark:border-accent/30 dark:bg-bg-2/80 md:text-sm${!hasChangeLogs ? ' opacity-50 cursor-not-allowed pointer-events-none' : ''}`}
+										className={`flex max-w-full items-center gap-2 rounded-full border iridescent-border bg-card/80 px-3 ml-4 py-1.5 text-xs text-foreground shadow-metallic backdrop-blur prism-transition hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/40 md:text-sm${!hasChangeLogs ? ' opacity-50 cursor-not-allowed pointer-events-none' : ''}`}
 										aria-label="Platform updates"
 									>
 										<AlertCircle className="h-4 w-4 text-accent" />

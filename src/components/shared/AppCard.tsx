@@ -225,22 +225,22 @@ const StatItem = ({
 	value: number;
 	highlighted?: boolean;
 }) => (
-	<div className="flex items-center gap-1 group-hover:scale-105 transition-transform duration-200">
+	<div className="flex items-center gap-1 group-hover:scale-105 prism-transition">
 		<Icon
 			className={cn(
-				'h-4 w-4 transition-all duration-200 text-gray-400',
+				'h-4 w-4 prism-transition text-muted-foreground',
 				highlighted && 'fill-yellow-500 text-yellow-500 drop-shadow-sm',
-				!highlighted && 'group-hover:text-bg-2',
+				!highlighted && 'group-hover:text-card',
 			)}
 		/>
-		<span className="font-medium text-xs text-text-tertiary group-hover:text-bg-2">
+		<span className="font-medium text-xs text-muted-foreground group-hover:text-card">
 			{value || 0}
 		</span>
 	</div>
 );
 
 const StatsDisplay = ({ stats }: { stats: StatsData }) => (
-	<div className="flex items-center gap-2 text-sm text-text-tertiary/80">
+	<div className="flex items-center gap-2 text-sm text-muted-foreground/80">
 		<StatItem
 			icon={STATS_ICONS.starCount}
 			value={stats.starCount || 0}
@@ -266,8 +266,8 @@ const AppMetadata = ({
 		return (
 			<div className="flex items-center gap-3 text-sm">
 				{app.userName === 'Anonymous User' ? (
-					<div className="flex items-center gap-2 text-text-tertiary">
-						<div className="h-8 w-8 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center shadow-sm">
+					<div className="flex items-center gap-2 text-muted-foreground">
+						<div className="h-8 w-8 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center shadow-neomorph-flat">
 							<User className="h-4 w-4 text-white" />
 						</div>
 					</div>
@@ -281,7 +281,7 @@ const AppMetadata = ({
 						</Avatar>
 					</div>
 				)}
-				<div className="flex flex-col line-clamp-1 gap-1 w-full text-text-primary group-hover:text-bg-2 ">
+				<div className="flex flex-col line-clamp-1 gap-1 w-full text-foreground group-hover:text-card prism-transition">
 					<span className="truncate text-ellipsis max-w-60 font-medium">
 						{app.title}
 					</span>
@@ -299,7 +299,7 @@ const AppMetadata = ({
 		const deploymentStatus = getDeploymentStatusInfo(app);
 		return (
 			<div className='flex flex-col'>
-				<span className="truncate text-ellipsis max-w-60 font-medium group-hover:text-bg-2">
+				<span className="truncate text-ellipsis max-w-60 font-medium group-hover:text-card prism-transition">
 					{app.title}
 				</span>
 				<div className="flex items-center gap-2.5 text-sm">
@@ -342,10 +342,10 @@ const AppMetadata = ({
 									{deploymentStatus.text}
 								</span>
 							</div>
-							<span className="text-text-tertiary/60">•</span>
+							<span className="text-muted-foreground/60">•</span>
 						</>
 					)}
-					<span className="text-xs text-text-tertiary/80 group-hover:text-bg-1 font-medium">
+					<span className="text-xs text-muted-foreground/80 group-hover:text-background font-medium prism-transition">
 						Updated{' '}
 						{isUserApp(app)
 							? app.updatedAtFormatted
@@ -363,7 +363,7 @@ const AppMetadata = ({
 	// Fallback for other cases
 	return (
 		<div className="flex items-center gap-2 text-sm">
-			<span className="text-xs text-text-tertiary/80 font-medium">
+			<span className="text-xs text-muted-foreground/80 font-medium">
 				{isUserApp(app)
 					? `Updated ${app.updatedAtFormatted}`
 					: 'Recently updated'}
@@ -424,8 +424,8 @@ export const AppCard = React.memo<AppCardProps>(
 				>
 					<Card
 						className={cn(
-							'h-full transition-all duration-300 ease-out cursor-pointer group relative overflow-hidden rounded-md p-2 bg-bg-1 hover:!bg-text hover:dark:!bg-text-primary',
-							'border border-border-primary hover:border-border-primary/60',
+							'h-full prism-card metallic-sheen cursor-pointer group relative overflow-hidden rounded-xl p-2 iridescent-glow-hover',
+							'border border-border hover:border-primary/40',
 						)}
 					>
 					{/* Enhanced Preview Section with High-Quality Rendering */}
@@ -556,7 +556,7 @@ export const AppCard = React.memo<AppCardProps>(
 									appId={app.id}
 									appTitle={app.title}
 									showOnHover={true}
-									className="h-6 w-6 text-text-tertiary hover:text-text-primary bg-bg-3/90 backdrop-blur-sm hover:bg-bg-3"
+									className="h-6 w-6 text-muted-foreground hover:text-foreground bg-card/90 glass backdrop-blur-sm hover:bg-card prism-transition"
 									size="sm"
 								/>
 							</div>
@@ -565,7 +565,7 @@ export const AppCard = React.memo<AppCardProps>(
 						{/* Visibility Badge for user apps (when not showing status overlays) */}
 						{(isUserApp(app) || isEnhancedApp(app)) &&
 							!deploymentStatus && (
-								<div className="absolute bottom-2 left-2 bg-bg-3/90 dark:bg-bg-4/90 backdrop-blur-sm rounded-md p-1">
+								<div className="absolute bottom-2 left-2 bg-card/90 glass backdrop-blur-sm rounded-md p-1">
 									{getVisibilityIcon(app.visibility)}
 								</div>
 							)}
@@ -573,7 +573,7 @@ export const AppCard = React.memo<AppCardProps>(
 						{/* Visibility Badge positioned differently when status overlay exists */}
 						{(isUserApp(app) || isEnhancedApp(app)) &&
 							deploymentStatus && (
-								<div className="absolute bottom-2 left-2 bg-bg-3/90 dark:bg-bg-4/90 backdrop-blur-sm rounded-md p-1">
+								<div className="absolute bottom-2 left-2 bg-card/90 glass backdrop-blur-sm rounded-md p-1">
 									{getVisibilityIcon(app.visibility)}
 								</div>
 							)}
