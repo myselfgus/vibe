@@ -202,9 +202,9 @@
 	--build-chat-colors-text-tertiary: hsl(210, 15%, 45%);
 
 	/* === Shadows - Neumorphic & Metallic === */
-	--shadow-neomorph: 2px 2px 4px rgba(0,0,0,0.1), -2px -2px 4px rgba(255,255,255,0.9);
-	--shadow-neomorph-inset: inset 2px 2px 4px rgba(0,0,0,0.1), inset -2px -2px 4px rgba(255,255,255,0.9);
-	--shadow-neomorph-flat: 1px 1px 2px rgba(0,0,0,0.08);
+	--shadow-neomorph: 4px 4px 8px rgba(0,0,0,0.15), -4px -4px 8px rgba(255,255,255,0.95);
+	--shadow-neomorph-inset: inset 3px 3px 6px rgba(0,0,0,0.15), inset -3px -3px 6px rgba(255,255,255,0.95);
+	--shadow-neomorph-flat: 2px 2px 4px rgba(0,0,0,0.12), -2px -2px 4px rgba(255,255,255,0.85);
 	--shadow-metallic: 0 2px 8px rgba(30, 58, 95, 0.15), 0 1px 4px rgba(85, 107, 47, 0.1);
 	--shadow-metallic-strong: 0 4px 16px rgba(30, 58, 95, 0.25), 0 2px 8px rgba(85, 107, 47, 0.15);
 	--shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.1);
@@ -267,9 +267,9 @@
 	--build-chat-colors-text-tertiary: hsl(210, 10%, 55%);
 
 	/* === Shadows - Enhanced for Dark Mode === */
-	--shadow-neomorph: 2px 2px 6px rgba(0,0,0,0.4), -2px -2px 6px rgba(255,255,255,0.02);
-	--shadow-neomorph-inset: inset 2px 2px 6px rgba(0,0,0,0.4), inset -2px -2px 6px rgba(255,255,255,0.02);
-	--shadow-neomorph-flat: 1px 1px 3px rgba(0,0,0,0.3);
+	--shadow-neomorph: 5px 5px 10px rgba(0,0,0,0.5), -5px -5px 10px rgba(255,255,255,0.04);
+	--shadow-neomorph-inset: inset 4px 4px 8px rgba(0,0,0,0.5), inset -4px -4px 8px rgba(255,255,255,0.04);
+	--shadow-neomorph-flat: 3px 3px 6px rgba(0,0,0,0.4), -3px -3px 6px rgba(255,255,255,0.03);
 	--shadow-metallic: 0 2px 12px rgba(30, 93, 189, 0.25), 0 1px 6px rgba(124, 179, 66, 0.15);
 	--shadow-metallic-strong: 0 4px 24px rgba(30, 93, 189, 0.35), 0 2px 12px rgba(124, 179, 66, 0.2);
 	--shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.3);

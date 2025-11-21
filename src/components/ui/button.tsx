@@ -10,18 +10,18 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "prism-button-primary",
+          "neomorph-button bg-primary text-primary-foreground hover:shadow-[var(--shadow-neomorph-flat)]",
         destructive:
-          "neomorph-button bg-destructive text-destructive-foreground hover:shadow-[var(--shadow-metallic-strong)] focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
+          "neomorph-button bg-destructive text-destructive-foreground hover:shadow-[var(--shadow-neomorph-flat)] focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
         outline:
-          "border-2 iridescent-border bg-transparent text-foreground hover:bg-card/50",
+          "border-2 border-border-primary bg-transparent text-foreground hover:bg-card/50 hover:shadow-[var(--shadow-neomorph-flat)]",
         secondary:
-          "prism-button-secondary",
+          "neomorph-button bg-secondary text-secondary-foreground hover:shadow-[var(--shadow-neomorph-flat)]",
         ghost:
           "hover:bg-muted hover:text-foreground text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         success:
-          "neomorph-button bg-success text-success-foreground hover:shadow-[var(--shadow-metallic-strong)]",
+          "neomorph-button bg-success text-success-foreground hover:shadow-[var(--shadow-neomorph-flat)]",
       },
       size: {
         default: "h-10 px-6 py-2.5 has-[>svg]:px-4",

@@ -16,7 +16,6 @@ import { useDragDrop } from '@/hooks/use-drag-drop';
 import { ImageUploadButton } from '@/components/image-upload-button';
 import { ImageAttachmentPreview } from '@/components/image-attachment-preview';
 import { SUPPORTED_FILE_MIME_TYPES } from '@/api-types';
-import { AnimatedBackground } from '@/components/animated-background';
 
 export default function Home() {
 	const navigate = useNavigate();
@@ -135,13 +134,17 @@ export default function Home() {
 
 	return (
 		<div className="relative flex flex-col items-center size-full">
-			{/* Animated background with shader effect */}
-			<AnimatedBackground
-				imageUrl="https://imagedelivery.net/ZSVIzNe6GQZrE_DQQqHAyw/6c9aea3d-c380-4658-ecaa-65d4afe1a100/public"
-				intensity={0.18}
-				speed={0.0008}
+			{/* Static background image */}
+			<div
+				className="fixed inset-0 pointer-events-none opacity-40"
+				style={{
+					backgroundImage: 'url(https://imagedelivery.net/ZSVIzNe6GQZrE_DQQqHAyw/6c9aea3d-c380-4658-ecaa-65d4afe1a100/public)',
+					backgroundSize: 'cover',
+					backgroundPosition: 'center',
+					zIndex: 0
+				}}
 			/>
-			
+
 			<LayoutGroup>
 				<div className="rounded-md w-full max-w-2xl overflow-hidden">
 					<motion.div
@@ -162,7 +165,7 @@ export default function Home() {
 								const query = textareaRef.current!.value;
 								handleCreateApp(query, agentMode);
 							}}
-							className="flex z-10 flex-col w-full min-h-[150px] bg-card/80 glass iridescent-border rounded-[20px] shadow-metallic iridescent-glow-hover p-5 prism-transition"
+							className="flex z-10 flex-col w-full min-h-[150px] bg-card/80 glass rounded-[20px] shadow-metallic p-5 prism-transition"
 						>
 							<div 
 								className={clsx(
@@ -223,7 +226,7 @@ export default function Home() {
 								<button
 									type="submit"
 									disabled={!query.trim()}
-									className="bg-accent text-white p-1 rounded-xl *:size-5 iridescent-glow-hover prism-transition hover:shadow-metallic disabled:opacity-50 disabled:cursor-not-allowed"
+									className="bg-accent text-white p-1 rounded-xl *:size-5 prism-transition hover:shadow-metallic disabled:opacity-50 disabled:cursor-not-allowed"
 								>
 									<ArrowRight />
 								</button>
@@ -242,7 +245,7 @@ export default function Home() {
 							exit={{ opacity: 0, y: -10 }}
 							className="w-full max-w-2xl px-6"
 						>
-							<div className="flex items-start gap-2 px-4 py-3 rounded-xl bg-card/50 glass-light border iridescent-border shadow-neomorph-flat">
+							<div className="flex items-start gap-2 px-4 py-3 rounded-xl bg-card/50 glass-light border border-border-primary shadow-neomorph-flat">
 								<Info className="size-4 text-accent flex-shrink-0 mt-0.5" />
 								<p className="text-xs text-muted-foreground leading-relaxed">
 									<span className="font-medium text-foreground/80">Images Beta:</span> Images guide app layout and design but may not be replicated exactly. The coding agent cannot access images directly for app assets.

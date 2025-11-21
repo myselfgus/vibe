@@ -4,9 +4,9 @@ import { cn } from "@/lib/utils"
 
 function Card({ className, variant = "default", ...props }: React.ComponentProps<"div"> & { variant?: "default" | "glass" | "metallic" }) {
   const variantClasses = {
-    default: "prism-card",
+    default: "neomorph-card",
     glass: "prism-card-glass",
-    metallic: "neomorph-card metallic-sheen iridescent-glow",
+    metallic: "neomorph-card metallic-sheen",
   };
 
   return (
