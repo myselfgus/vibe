@@ -170,8 +170,8 @@ export default function Home() {
 							"px-6 p-8 flex flex-col items-center z-10",
 							discoverReady ? "mt-48" : "mt-[20vh] sm:mt-[24vh] md:mt-[28vh]"
 						)}>
-						<h1 className="text-shadow-sm text-shadow-red-200 dark:text-shadow-red-900 text-accent font-medium leading-[1.1] tracking-tight text-5xl w-full mb-4 bg-clip-text bg-gradient-to-r from-text-primary to-text-primary/90">
-							What should we build today?
+						<h1 className="text-shadow-sm text-shadow-red-200 dark:text-shadow-red-900 text-accent leading-[1.1] tracking-tight text-5xl w-full mb-4 bg-clip-text bg-gradient-to-r from-text-primary to-text-primary/90" style={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 800 }}>
+							CONCEPT2CODE
 						</h1>
 
 						<form
