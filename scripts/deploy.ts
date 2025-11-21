@@ -1704,6 +1704,7 @@ class CloudflareDeploymentManager {
 			'OPENAI_API_KEY',
 			'GOOGLE_AI_STUDIO_API_KEY',
 			'OPENROUTER_API_KEY',
+			'XAI_API_KEY',
 			'GROQ_API_KEY',
 			'GOOGLE_CLIENT_SECRET',
 			'GOOGLE_CLIENT_ID',

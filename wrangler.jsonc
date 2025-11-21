@@ -145,9 +145,9 @@
         "DISPATCH_NAMESPACE": "meta-mcp",
         "ENABLE_READ_REPLICAS": "true",
         "CLOUDFLARE_AI_GATEWAY": "voither",
-        "CUSTOM_DOMAIN": "go4pilot.com",
-        "MAX_SANDBOX_INSTANCES": "2",
-        "SANDBOX_INSTANCE_TYPE": "standard-3",
+        "CUSTOM_DOMAIN": "concept2code.com",
+        "MAX_SANDBOX_INSTANCES": "3",
+        "SANDBOX_INSTANCE_TYPE": "standard-4",
         "USE_CLOUDFLARE_IMAGES": "True"
     },
 	"workers_dev": false,
