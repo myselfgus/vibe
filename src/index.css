@@ -132,70 +132,156 @@
 }
 
 
+/* ============================================
+   VOITHER PRISM DESIGN SYSTEM
+   Combining Neumorphism + Glassmorphism + Iridescent Metallics
+   ============================================ */
+
 :root {
-	--radius:
-		0.625rem;
-	--destructive:
-		oklch(0.577 0.245 27.325);
-	--border:
-		oklch(0.922 0 0);
-	--input:
-		oklch(0.922 0 0);
-	--ring:
-		oklch(0.708 0 0);
-	--build-accent-color: #ff3d00;
-	--build-chat-colors-bg-1: #e7e7e7;
-	--build-chat-colors-bg-2: #f6f6f6;
-	--build-chat-colors-bg-3: #fbfbfc;
-	--build-chat-colors-bg-4: #ffffff;
-	--build-chat-colors-border-primary: #e5e5e5;
-	--build-chat-colors-border-secondary: #eeeeee;
-	--build-chat-colors-border-tertiary: #eeeeee;
-	--build-chat-colors-danger: #950000cc;
-	--build-chat-colors-brand-heavy: #f6821f;
-	--build-chat-colors-brand-primary: #f6821f;
-	--build-chat-colors-brand-subtle: #f6821f;
-	--build-chat-colors-text-inverted: #ffffff;
-	--build-chat-colors-text-primary: #0a0a0a;
-	--build-chat-colors-text-secondary: #171717;
-	--build-chat-colors-text-tertiary: #21212199;
+	/* === Core Radius & Shape === */
+	--radius: 1.25rem; /* 20px - highly rounded for soft UI */
+
+	/* === Light Mode - Monochromatic Foundation === */
+	--background: 210 18% 92%; /* #e5e9ed - blue-gray */
+	--foreground: 210 25% 12%; /* #1a2332 - deep blue-black */
+	--card: 210 20% 96%; /* #f2f4f7 */
+	--card-foreground: 210 25% 12%;
+
+	/* === Surgical Color Highlights (10% usage) === */
+	--primary: 210 65% 28%; /* #1e3a5f - Petrol Blue */
+	--primary-foreground: 210 15% 98%;
+	--accent: 95 35% 38%; /* #556b2f - Moss Green */
+	--accent-foreground: 95 10% 98%;
+
+	/* === Secondary & Muted === */
+	--secondary: 210 12% 88%; /* #d8dde3 */
+	--secondary-foreground: 210 25% 12%;
+	--muted: 210 15% 90%; /* #e0e4e8 */
+	--muted-foreground: 210 15% 45%;
+
+	/* === Borders & Inputs === */
+	--border: 210 10% 85%;
+	--input: 210 10% 90%;
+	--ring: 210 65% 28%;
+
+	/* === Status Colors (Surgical Use Only) === */
+	--success: 95 45% 42%;
+	--success-foreground: 95 10% 98%;
+	--info: 210 75% 48%;
+	--info-foreground: 210 10% 98%;
+	--warning: 38 85% 55%;
+	--warning-foreground: 38 10% 10%;
+	--destructive: 0 62% 48%;
+	--destructive-foreground: 0 10% 98%;
+
+	/* === Iridescent Palette (Dynamic Reflections) === */
+	--iridescent-1: 210 65% 28%; /* Deep petrol blue */
+	--iridescent-2: 95 35% 38%; /* Moss green metallic */
+	--iridescent-3: 185 45% 35%; /* Teal metallic transition */
+
+	/* === Chat Colors (Legacy Support) === */
+	--build-accent-color: hsl(210, 65%, 28%);
+	--build-chat-colors-bg-1: hsl(210, 18%, 88%);
+	--build-chat-colors-bg-2: hsl(210, 20%, 94%);
+	--build-chat-colors-bg-3: hsl(210, 18%, 92%);
+	--build-chat-colors-bg-4: hsl(210, 20%, 96%);
+	--build-chat-colors-border-primary: hsl(210, 10%, 85%);
+	--build-chat-colors-border-secondary: hsl(210, 10%, 88%);
+	--build-chat-colors-border-tertiary: hsl(210, 10%, 90%);
+	--build-chat-colors-danger: hsl(0, 62%, 48%);
+	--build-chat-colors-brand-heavy: hsl(210, 65%, 28%);
+	--build-chat-colors-brand-primary: hsl(210, 65%, 28%);
+	--build-chat-colors-brand-subtle: hsl(210, 65%, 40%);
+	--build-chat-colors-text-inverted: hsl(210, 15%, 98%);
+	--build-chat-colors-text-primary: hsl(210, 25%, 12%);
+	--build-chat-colors-text-secondary: hsl(210, 15%, 30%);
+	--build-chat-colors-text-tertiary: hsl(210, 15%, 45%);
+
+	/* === Shadows - Neumorphic & Metallic === */
+	--shadow-neomorph: 2px 2px 4px rgba(0,0,0,0.1), -2px -2px 4px rgba(255,255,255,0.9);
+	--shadow-neomorph-inset: inset 2px 2px 4px rgba(0,0,0,0.1), inset -2px -2px 4px rgba(255,255,255,0.9);
+	--shadow-neomorph-flat: 1px 1px 2px rgba(0,0,0,0.08);
+	--shadow-metallic: 0 2px 8px rgba(30, 58, 95, 0.15), 0 1px 4px rgba(85, 107, 47, 0.1);
+	--shadow-metallic-strong: 0 4px 16px rgba(30, 58, 95, 0.25), 0 2px 8px rgba(85, 107, 47, 0.15);
+	--shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .dark {
-	--destructive:
-		#ef4444; /* Error red */
-	--border:
-		#393939; /* Primary border color */
-	--input:
-		#292929; /* Input background */
+	/* === Dark Mode - Enhanced Metallics === */
+	--background: 210 30% 8%; /* Near-black with blue tint */
+	--foreground: 210 15% 92%;
+	--card: 210 25% 12%;
+	--card-foreground: 210 15% 92%;
 
-	--build-chat-colors-bg-1: #151515;
-	--build-chat-colors-bg-2: #1f2020;
-	--build-chat-colors-bg-3: #292929;
-	--build-chat-colors-bg-4: #3c3c3c;
-	--build-chat-colors-border-primary: #393939;
-	--build-chat-colors-border-secondary: #454746;
-	--build-chat-colors-border-tertiary: #454746;
-	--build-chat-colors-brand-heavy: #f6821f;
-	--build-chat-colors-brand-primary: #f6821f;
-	--build-chat-colors-brand-subtle: #f6821f;
-	--build-chat-colors-text-inverted: #000000;
-	--build-chat-colors-text-primary: #ffffff;
-	--build-chat-colors-text-secondary: #cdcaca;
-	--build-chat-colors-text-tertiary: #bcb9b9;
+	/* === Primary & Accent (Brighter) === */
+	--primary: 210 70% 45%; /* Brighter petrol blue */
+	--primary-foreground: 210 10% 10%;
+	--accent: 95 42% 48%; /* More vibrant moss green */
+	--accent-foreground: 95 10% 10%;
+
+	/* === Secondary & Muted === */
+	--secondary: 210 15% 18%;
+	--secondary-foreground: 210 10% 92%;
+	--muted: 210 20% 15%;
+	--muted-foreground: 210 10% 55%;
+
+	/* === Borders & Inputs === */
+	--border: 210 15% 25%;
+	--input: 210 20% 15%;
+	--ring: 210 70% 45%;
+
+	/* === Status Colors (Enhanced) === */
+	--success: 95 50% 48%;
+	--success-foreground: 95 10% 10%;
+	--info: 210 80% 55%;
+	--info-foreground: 210 10% 10%;
+	--warning: 38 90% 60%;
+	--warning-foreground: 38 10% 10%;
+	--destructive: 0 70% 55%;
+	--destructive-foreground: 0 10% 10%;
+
+	/* === Iridescent Palette (More Saturated) === */
+	--iridescent-1: 210 75% 48%;
+	--iridescent-2: 95 45% 52%;
+	--iridescent-3: 185 50% 42%;
+
+	/* === Chat Colors (Dark Mode) === */
+	--build-chat-colors-bg-1: hsl(210, 30%, 10%);
+	--build-chat-colors-bg-2: hsl(210, 28%, 14%);
+	--build-chat-colors-bg-3: hsl(210, 30%, 8%);
+	--build-chat-colors-bg-4: hsl(210, 25%, 12%);
+	--build-chat-colors-border-primary: hsl(210, 15%, 25%);
+	--build-chat-colors-border-secondary: hsl(210, 15%, 28%);
+	--build-chat-colors-border-tertiary: hsl(210, 15%, 30%);
+	--build-chat-colors-danger: hsl(0, 70%, 55%);
+	--build-chat-colors-brand-heavy: hsl(210, 70%, 45%);
+	--build-chat-colors-brand-primary: hsl(210, 70%, 45%);
+	--build-chat-colors-brand-subtle: hsl(210, 60%, 50%);
+	--build-chat-colors-text-inverted: hsl(210, 10%, 10%);
+	--build-chat-colors-text-primary: hsl(210, 15%, 92%);
+	--build-chat-colors-text-secondary: hsl(210, 10%, 70%);
+	--build-chat-colors-text-tertiary: hsl(210, 10%, 55%);
+
+	/* === Shadows - Enhanced for Dark Mode === */
+	--shadow-neomorph: 2px 2px 6px rgba(0,0,0,0.4), -2px -2px 6px rgba(255,255,255,0.02);
+	--shadow-neomorph-inset: inset 2px 2px 6px rgba(0,0,0,0.4), inset -2px -2px 6px rgba(255,255,255,0.02);
+	--shadow-neomorph-flat: 1px 1px 3px rgba(0,0,0,0.3);
+	--shadow-metallic: 0 2px 12px rgba(30, 93, 189, 0.25), 0 1px 6px rgba(124, 179, 66, 0.15);
+	--shadow-metallic-strong: 0 4px 24px rgba(30, 93, 189, 0.35), 0 2px 12px rgba(124, 179, 66, 0.2);
+	--shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.3);
 
 	--shadow-dialog:
-		0px 18px 60px 0px rgba(6, 6, 5, 0.1),
-		3px 3px 13px 0px rgba(0, 0, 0, 0.04), -3px 3px 13px 0px rgba(0, 0, 0, 0.04),
-		24px 24px 24px 0px rgba(0, 0, 0, 0.03),
-		-24px 24px 24px 0px rgba(0, 0, 0, 0.03),
-		53px 53px 32px 0px rgba(0, 0, 0, 0.02),
-		0px 0px 0px 1px rgba(217, 217, 217, 0.2);
+		0px 18px 60px 0px rgba(6, 6, 5, 0.3),
+		3px 3px 13px 0px rgba(0, 0, 0, 0.2), -3px 3px 13px 0px rgba(0, 0, 0, 0.2),
+		24px 24px 24px 0px rgba(0, 0, 0, 0.15),
+		-24px 24px 24px 0px rgba(0, 0, 0, 0.15),
+		53px 53px 32px 0px rgba(0, 0, 0, 0.1),
+		0px 0px 0px 1px rgba(255, 255, 255, 0.05);
 	--shadow-elevation:
-		6px 6px 13px 0px rgba(0, 0, 0, 0.2),
-		24px 24px 24px 0px rgba(0, 0, 0, 0.17),
-		53px 53px 32px 0px rgba(0, 0, 0, 0.12),
-		0px 0px 0px 1px rgba(217, 217, 217, 0.1);
+		6px 6px 13px 0px rgba(0, 0, 0, 0.3),
+		24px 24px 24px 0px rgba(0, 0, 0, 0.25),
+		53px 53px 32px 0px rgba(0, 0, 0, 0.2),
+		0px 0px 0px 1px rgba(255, 255, 255, 0.05);
 }
 
 @layer base {
@@ -388,4 +474,312 @@ scrollbar-width: none; /* Firefox */
 }
 .no-scrollbar::-webkit-scrollbar {
 display: none; /* Chrome, Safari, Opera */
+}
+
+/* ============================================
+   VOITHER PRISM UTILITIES
+   ============================================ */
+
+/* === NEUMORPHISM === */
+.neomorph-card {
+	background: hsl(var(--card));
+	box-shadow: var(--shadow-neomorph);
+	border-radius: var(--radius);
+	transition: all 0.3s ease-out;
+}
+
+.neomorph-card:hover {
+	box-shadow: var(--shadow-metallic-strong);
+}
+
+.neomorph-button {
+	background: hsl(var(--card));
+	box-shadow: var(--shadow-neomorph);
+	border-radius: var(--radius);
+	transition: all 0.15s ease-out;
+}
+
+.neomorph-button:hover {
+	box-shadow: var(--shadow-neomorph-flat);
+}
+
+.neomorph-button:active {
+	box-shadow: var(--shadow-neomorph-inset);
+}
+
+.neomorph-input {
+	background: hsl(var(--input));
+	box-shadow: var(--shadow-neomorph-inset);
+	border-radius: calc(var(--radius) - 0.25rem);
+	transition: all 0.2s ease-out;
+}
+
+.neomorph-input:focus {
+	box-shadow: var(--shadow-neomorph-inset), 0 0 0 2px hsl(var(--ring));
+}
+
+/* === GLASSMORPHISM === */
+.glass {
+	background: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+	border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.dark .glass {
+	background: rgba(0, 0, 0, 0.2);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-strong {
+	background: rgba(255, 255, 255, 0.15);
+	backdrop-filter: blur(18px);
+	-webkit-backdrop-filter: blur(18px);
+	border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.dark .glass-strong {
+	background: rgba(0, 0, 0, 0.3);
+	border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.glass-light {
+	background: rgba(255, 255, 255, 0.08);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dark .glass-light {
+	background: rgba(0, 0, 0, 0.15);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-border {
+	border: 2px solid rgba(255, 255, 255, 0.18);
+}
+
+.dark .glass-border {
+	border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/* === IRIDESCENT EFFECTS === */
+.iridescent-border {
+	border: 2px solid transparent;
+	background: linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
+		linear-gradient(
+			135deg,
+			hsl(var(--iridescent-1)),
+			hsl(var(--iridescent-3)),
+			hsl(var(--iridescent-2))
+		) border-box;
+	transition: all 0.3s ease-out;
+}
+
+.iridescent-text {
+	background: linear-gradient(
+		135deg,
+		hsl(var(--iridescent-1)),
+		hsl(var(--iridescent-3)),
+		hsl(var(--iridescent-2))
+	);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.iridescent-glow {
+	box-shadow:
+		0 0 20px rgba(30, 58, 95, 0.2),
+		0 0 10px rgba(85, 107, 47, 0.15);
+}
+
+.dark .iridescent-glow {
+	box-shadow:
+		0 0 20px rgba(30, 93, 189, 0.3),
+		0 0 10px rgba(124, 179, 66, 0.2);
+}
+
+.iridescent-glow-hover {
+	transition: box-shadow 0.3s ease-out;
+}
+
+.iridescent-glow-hover:hover {
+	box-shadow:
+		0 0 30px rgba(30, 58, 95, 0.3),
+		0 0 15px rgba(85, 107, 47, 0.25),
+		0 4px 16px rgba(30, 58, 95, 0.2);
+}
+
+.dark .iridescent-glow-hover:hover {
+	box-shadow:
+		0 0 30px rgba(30, 93, 189, 0.4),
+		0 0 15px rgba(124, 179, 66, 0.3),
+		0 4px 16px rgba(30, 93, 189, 0.3);
+}
+
+.metallic-sheen {
+	position: relative;
+	overflow: hidden;
+}
+
+.metallic-sheen::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(30, 58, 95, 0.1),
+		rgba(85, 107, 47, 0.08),
+		transparent
+	);
+	transition: left 0.5s ease-out;
+}
+
+.metallic-sheen:hover::before {
+	left: 100%;
+}
+
+.dark .metallic-sheen::before {
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(30, 93, 189, 0.15),
+		rgba(124, 179, 66, 0.12),
+		transparent
+	);
+}
+
+/* === PRISM COMPONENT COMBINATIONS === */
+.prism-card {
+	background: hsl(var(--card));
+	box-shadow: var(--shadow-neomorph);
+	border-radius: var(--radius);
+	transition: all 0.3s ease-out;
+	position: relative;
+	overflow: hidden;
+}
+
+.prism-card:hover {
+	box-shadow: var(--shadow-metallic-strong);
+}
+
+.prism-card::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(30, 58, 95, 0.1),
+		rgba(85, 107, 47, 0.08),
+		transparent
+	);
+	transition: left 0.5s ease-out;
+}
+
+.prism-card:hover::before {
+	left: 100%;
+}
+
+.dark .prism-card::before {
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(30, 93, 189, 0.15),
+		rgba(124, 179, 66, 0.12),
+		transparent
+	);
+}
+
+.prism-card-glass {
+	background: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	box-shadow: var(--shadow-metallic);
+	border-radius: 1.25rem;
+	padding: 1.5rem;
+}
+
+.dark .prism-card-glass {
+	background: rgba(0, 0, 0, 0.2);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.prism-button-primary {
+	background: hsl(var(--primary));
+	color: hsl(var(--primary-foreground));
+	box-shadow: var(--shadow-neomorph);
+	border-radius: var(--radius);
+	transition: all 0.15s ease-out;
+}
+
+.prism-button-primary:hover {
+	box-shadow:
+		0 0 30px rgba(30, 58, 95, 0.3),
+		0 0 15px rgba(85, 107, 47, 0.25),
+		0 4px 16px rgba(30, 58, 95, 0.2);
+}
+
+.dark .prism-button-primary:hover {
+	box-shadow:
+		0 0 30px rgba(30, 93, 189, 0.4),
+		0 0 15px rgba(124, 179, 66, 0.3),
+		0 4px 16px rgba(30, 93, 189, 0.3);
+}
+
+.prism-button-secondary {
+	background: hsl(var(--secondary));
+	color: hsl(var(--secondary-foreground));
+	box-shadow: var(--shadow-neomorph);
+	border-radius: var(--radius);
+	transition: all 0.15s ease-out;
+}
+
+.prism-button-secondary:hover {
+	box-shadow: var(--shadow-neomorph-flat);
+}
+
+.prism-button-secondary:active {
+	box-shadow: var(--shadow-neomorph-inset);
+}
+
+.prism-badge-success {
+	border-radius: 9999px;
+	padding: 0.25rem 0.75rem;
+	background: hsl(var(--success));
+	color: hsl(var(--success-foreground));
+	box-shadow: var(--shadow-neomorph-flat);
+}
+
+.prism-input {
+	width: 100%;
+	padding: 0.5rem 1rem;
+	background: hsl(var(--input));
+	box-shadow: var(--shadow-neomorph-inset);
+	border-radius: calc(var(--radius) - 0.25rem);
+	transition: all 0.2s ease-out;
+	color: hsl(var(--foreground));
+	border: 1px solid hsl(var(--border));
+}
+
+.prism-input:focus {
+	box-shadow: var(--shadow-neomorph-inset), 0 0 0 2px hsl(var(--ring));
+}
+
+/* === ANIMATION UTILITIES === */
+.prism-transition {
+	transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.prism-transition-fast {
+	transition: all 0.15s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
