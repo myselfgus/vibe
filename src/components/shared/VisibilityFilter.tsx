@@ -40,24 +40,24 @@ export const VisibilityFilter: React.FC<VisibilityFilterProps> = ({
 }) => {
   return (
     <div className={cn(
-      "inline-flex items-center rounded-lg bg-bg-4 p-0.5",
+      "inline-flex items-center rounded-xl bg-card shadow-neomorph-flat p-0.5",
       className
     )}>
       {visibilityOptions.map((option) => {
         const Icon = option.icon;
         const isActive = value === option.value;
-        
+
         return (
           <motion.button
             key={option.value}
             onClick={() => onChange(option.value)}
             className={cn(
-              "relative inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200",
+              "relative inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium prism-transition",
               "outline-none focus-visible:ring-1 focus-visible:ring-accent/30",
               isActive
-                ? "text-text-primary"
-                : "text-text-tertiary hover:text-text-secondary",
-              !isActive && "hover:bg-bg-3/30"
+                ? "text-foreground"
+                : "text-muted-foreground hover:text-foreground/80",
+              !isActive && "hover:bg-muted/30"
             )}
             whileHover={{ scale: isActive ? 1 : 1.01 }}
             whileTap={{ scale: 0.99 }}
@@ -65,7 +65,7 @@ export const VisibilityFilter: React.FC<VisibilityFilterProps> = ({
             {isActive && (
               <motion.div
                 className={cn(
-                  "absolute inset-0 rounded-md bg-bg-1 shadow-sm"
+                  "absolute inset-0 rounded-xl bg-background shadow-metallic iridescent-glow"
                 )}
                 layoutId="activeBackground"
                 transition={{
@@ -77,7 +77,7 @@ export const VisibilityFilter: React.FC<VisibilityFilterProps> = ({
             )}
             <span className="relative flex items-center gap-1.5">
               <Icon className={cn(
-                "h-3 w-3 transition-colors duration-200",
+                "h-3 w-3 prism-transition",
                 isActive && "text-accent"
               )} />
               <span>{option.label}</span>

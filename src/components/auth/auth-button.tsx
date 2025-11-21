@@ -116,7 +116,7 @@ export function AuthButton({ className }: AuthButtonProps) {
 							src={user.avatarUrl}
 							alt={user.displayName || user.email}
 						/>
-						<AvatarFallback className="bg-text-secondary/10 text-text-primary font-semibold">
+						<AvatarFallback className="bg-muted text-foreground font-semibold">
 							{getInitials()}
 						</AvatarFallback>
 					</Avatar>
@@ -141,17 +141,17 @@ export function AuthButton({ className }: AuthButtonProps) {
 										src={user.avatarUrl}
 										alt={user.displayName || user.email}
 									/>
-									<AvatarFallback className="bg-text-secondary/10 text-text-primary font-semibold text-lg">
+									<AvatarFallback className="bg-muted text-foreground font-semibold text-lg">
 										{getInitials()}
 									</AvatarFallback>
 								</Avatar>
-								<div className="flex flex-col gap-1 flex-1 text-text-primary">
+								<div className="flex flex-col gap-1 flex-1 text-foreground">
 									<div className="flex items-center gap-2">
 										<span className="text-sm font-semibold">
 											{user.displayName || 'User'}
 										</span>
 									</div>
-									<span className="text-xs text-text-tertiary">
+									<span className="text-xs text-muted-foreground">
 										{user.email}
 									</span>
 								</div>
@@ -170,7 +170,7 @@ export function AuthButton({ className }: AuthButtonProps) {
 
 						<DropdownMenuItem
 							onClick={() => logout()}
-							className="cursor-pointer text-destructive focus:text-text-primary"
+							className="cursor-pointer text-destructive focus:text-foreground"
 						>
 							<LogOut className="mr-1 h-4 w-4" />
 							Sign Out
