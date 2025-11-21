@@ -137,9 +137,9 @@ export default function Home() {
 		<div className="relative flex flex-col items-center size-full">
 			{/* Animated background with shader effect */}
 			<AnimatedBackground
-				imageUrl="https://imagedelivery.net/1a481f7cdb7027c30174a692c89cbda1/6c9aea3d-c380-4658-ecaa-65d4afe1a100/public"
-				intensity={0.12}
-				speed={0.0004}
+				imageUrl="https://imagedelivery.net/ZSVIzNe6GQZrE_DQQqHAyw/6c9aea3d-c380-4658-ecaa-65d4afe1a100/public"
+				intensity={0.18}
+				speed={0.0008}
 			/>
 			
 			<LayoutGroup>
@@ -162,7 +162,7 @@ export default function Home() {
 								const query = textareaRef.current!.value;
 								handleCreateApp(query, agentMode);
 							}}
-							className="flex z-10 flex-col w-full min-h-[150px] bg-card/80 glass border iridescent-border rounded-[20px] shadow-metallic p-5 prism-transition"
+							className="flex z-10 flex-col w-full min-h-[150px] bg-card/80 glass iridescent-border rounded-[20px] shadow-metallic iridescent-glow-hover p-5 prism-transition"
 						>
 							<div 
 								className={clsx(

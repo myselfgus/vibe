@@ -584,15 +584,43 @@ display: none; /* Chrome, Safari, Opera */
 
 /* === IRIDESCENT EFFECTS === */
 .iridescent-border {
-	border: 2px solid transparent;
-	background: linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
-		linear-gradient(
-			135deg,
-			hsl(var(--iridescent-1)),
-			hsl(var(--iridescent-3)),
-			hsl(var(--iridescent-2))
-		) border-box;
+	border: none;
+	box-shadow:
+		0 0 20px hsla(210, 85%, 55%, 0.3),
+		0 0 40px hsla(185, 70%, 50%, 0.2),
+		0 0 60px hsla(95, 65%, 55%, 0.15),
+		inset 0 2px 4px rgba(255, 255, 255, 0.1),
+		inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+	animation: iridescent-glow-pulse 8s ease-in-out infinite;
 	transition: all 0.3s ease-out;
+}
+
+.iridescent-border:hover {
+	box-shadow:
+		0 0 30px hsla(210, 85%, 55%, 0.5),
+		0 0 60px hsla(185, 70%, 50%, 0.35),
+		0 0 90px hsla(95, 65%, 55%, 0.25),
+		inset 0 2px 4px rgba(255, 255, 255, 0.15),
+		inset 0 -2px 4px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes iridescent-glow-pulse {
+	0%, 100% {
+		box-shadow:
+			0 0 20px hsla(210, 85%, 55%, 0.3),
+			0 0 40px hsla(185, 70%, 50%, 0.2),
+			0 0 60px hsla(95, 65%, 55%, 0.15),
+			inset 0 2px 4px rgba(255, 255, 255, 0.1),
+			inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+	}
+	50% {
+		box-shadow:
+			0 0 25px hsla(95, 65%, 55%, 0.35),
+			0 0 50px hsla(210, 85%, 55%, 0.25),
+			0 0 75px hsla(185, 70%, 50%, 0.18),
+			inset 0 2px 4px rgba(255, 255, 255, 0.1),
+			inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+	}
 }
 
 .iridescent-text {
