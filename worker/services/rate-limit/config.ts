@@ -88,20 +88,17 @@ export const DEFAULT_RATE_LIMIT_SETTINGS: RateLimitSettings = {
 	},
 };
 
-// Simple, pro models -> 4, Flash -> 1, Flash Lite -> 0
+// Rate increments per model: Haiku/Fast -> 1, Sonnet/Pro/Reasoning -> 4
 export const DEFAULT_RATE_INCREMENTS_FOR_MODELS: Record<AIModels | string, number> = {
-	[AIModels.GEMINI_1_5_FLASH_8B] : 0,
-	[AIModels.GEMINI_2_0_FLASH] : 0,
-	[AIModels.GEMINI_2_5_FLASH_LITE] : 0,
-	[AIModels.GEMINI_2_5_FLASH_LITE_LATEST] : 0,
+	// Gemini models
+	[AIModels.GEMINI_3_PRO]: 4,
+	[AIModels.GEMINI_2_5_PRO]: 4,
 
-	[AIModels.GEMINI_2_5_FLASH] : 1,
-	[AIModels.GEMINI_2_5_FLASH_LATEST] : 1,
-	[AIModels.GEMINI_2_5_FLASH_PREVIEW_04_17] : 1,
-	[AIModels.GEMINI_2_5_FLASH_PREVIEW_05_20] : 1,
+	// Claude models
+	[AIModels.CLAUDE_HAIKU_4_5]: 1,
+	[AIModels.CLAUDE_SONNET_4_5]: 4,
 
-	[AIModels.GEMINI_2_5_PRO_LATEST] : 4,
-	[AIModels.GEMINI_2_5_PRO] : 4,
-	[AIModels.GEMINI_2_5_PRO_PREVIEW_05_06] : 4,
-	[AIModels.GEMINI_2_5_PRO_PREVIEW_06_05] : 4,
+	// Grok models
+	[AIModels.GROK_CODE_FAST_1]: 1,
+	[AIModels.GROK_4_1_FAST_REASONING]: 4,
 };

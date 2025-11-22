@@ -272,11 +272,11 @@ export class RateLimitService {
                     incrementBy
 				});
 				throw new RateLimitExceededError(
-					`AI inference rate limit exceeded. Consider using lighter models. Maximum ${config.llmCalls.limit} credits per ${config.llmCalls.period / 3600} hour${config.llmCalls.period >= 7200 ? 's' : ''} or ${config.llmCalls.dailyLimit} credits per day. Gemini pro models cost ${DEFAULT_RATE_INCREMENTS_FOR_MODELS[AIModels.GEMINI_2_5_PRO]} credits per call, flash models cost ${DEFAULT_RATE_INCREMENTS_FOR_MODELS[AIModels.GEMINI_2_5_FLASH]} credits per call, and flash lite models cost ${DEFAULT_RATE_INCREMENTS_FOR_MODELS[AIModels.GEMINI_2_5_FLASH_LITE]} credit per call.`,
+					`AI inference rate limit exceeded. Maximum ${config.llmCalls.limit} credits per ${config.llmCalls.period / 3600} hour${config.llmCalls.period >= 7200 ? 's' : ''} or ${config.llmCalls.dailyLimit} credits per day. Pro/Sonnet/Reasoning models cost ${DEFAULT_RATE_INCREMENTS_FOR_MODELS[AIModels.CLAUDE_SONNET_4_5]} credits, Haiku/Fast models cost ${DEFAULT_RATE_INCREMENTS_FOR_MODELS[AIModels.CLAUDE_HAIKU_4_5]} credit per call.`,
 					RateLimitType.LLM_CALLS,
 					config.llmCalls.limit,
 					config.llmCalls.period,
-                    [`Please try again in due time when the limit resets for you. Consider using lighter models. Gemini pro models cost ${DEFAULT_RATE_INCREMENTS_FOR_MODELS[AIModels.GEMINI_2_5_PRO]} credits per call, flash models cost ${DEFAULT_RATE_INCREMENTS_FOR_MODELS[AIModels.GEMINI_2_5_FLASH]} credits per call, and flash lite models cost ${DEFAULT_RATE_INCREMENTS_FOR_MODELS[AIModels.GEMINI_2_5_FLASH_LITE]} credit per call.`]
+					[`Please try again when the limit resets. Pro/Sonnet/Reasoning models cost ${DEFAULT_RATE_INCREMENTS_FOR_MODELS[AIModels.CLAUDE_SONNET_4_5]} credits, Haiku/Fast models cost ${DEFAULT_RATE_INCREMENTS_FOR_MODELS[AIModels.CLAUDE_HAIKU_4_5]} credit per call.`]
 				);
 			}
 		} catch (error) {

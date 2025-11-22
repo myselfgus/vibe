@@ -172,12 +172,10 @@ export class ModelTestService extends BaseService {
      */
     private getTestModelForProvider(provider: string): string | null {
         const testModels: Record<string, string> = {
-            'openai': AIModels.OPENAI_5_MINI,
             'anthropic': AIModels.CLAUDE_SONNET_4_5,
-            'google-ai-studio': AIModels.GEMINI_2_5_FLASH,
-            'gemini': AIModels.GEMINI_2_5_FLASH,
-            'grok': AIModels.GROK_4_1_FAST,
-            'cerebras': AIModels.CEREBRAS_GPT_OSS
+            'google-ai-studio': AIModels.GEMINI_2_5_PRO,
+            'gemini': AIModels.GEMINI_2_5_PRO,
+            'grok': AIModels.GROK_4_1_FAST_REASONING,
         };
 
         return testModels[provider] || null;

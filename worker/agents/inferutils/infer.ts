@@ -115,7 +115,7 @@ export async function executeInference<T extends z.AnyZodObject>(   {
                 actionKey: agentActionName,
                 format,
                 maxTokens,
-                modelName: useCheaperModel ? AIModels.GEMINI_2_5_FLASH : modelName,
+                modelName: useCheaperModel ? AIModels.CLAUDE_HAIKU_4_5 : modelName,
                 formatOptions: {
                     debug: false,
                 },
@@ -129,7 +129,7 @@ export async function executeInference<T extends z.AnyZodObject>(   {
                 metadata: context,
                 messages,
                 maxTokens,
-                modelName: useCheaperModel ? AIModels.GEMINI_2_5_FLASH: modelName,
+                modelName: useCheaperModel ? AIModels.CLAUDE_HAIKU_4_5 : modelName,
                 tools,
                 stream,
                 actionKey: agentActionName,
