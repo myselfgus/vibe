@@ -9,16 +9,17 @@ import { ReasoningEffort } from "openai/resources.mjs";
 export enum AIModels {
     DISABLED = 'disabled',
 
+	// Gemini models (google-ai-studio provider)
+	GEMINI_3_PRO = 'google-ai-studio/gemini-3-pro',
+	GEMINI_3_FLASH = 'google-ai-studio/gemini-3-flash',
 	GEMINI_2_0_FLASH = 'google-ai-studio/gemini-2.0-flash',
 	GEMINI_2_5_PRO = 'google-ai-studio/gemini-2.5-pro',
 	GEMINI_2_5_FLASH = 'google-ai-studio/gemini-2.5-flash',
 	GEMINI_2_5_FLASH_LITE = 'google-ai-studio/gemini-2.5-flash-lite',
-
 	GEMINI_1_5_FLASH_8B = 'google-ai-studio/gemini-1.5-flash-8b-latest',
-    GEMINI_2_5_FLASH_LATEST = 'google-ai-studio/gemini-2.5-flash-latest',
-    GEMINI_2_5_FLASH_LITE_LATEST = 'google-ai-studio/gemini-2.5-flash-lite-latest',
-    GEMINI_2_5_PRO_LATEST = 'google-ai-studio/gemini-2.5-pro-latest',
-
+	GEMINI_2_5_FLASH_LATEST = 'google-ai-studio/gemini-2.5-flash-latest',
+	GEMINI_2_5_FLASH_LITE_LATEST = 'google-ai-studio/gemini-2.5-flash-lite-latest',
+	GEMINI_2_5_PRO_LATEST = 'google-ai-studio/gemini-2.5-pro-latest',
 	GEMINI_2_5_PRO_PREVIEW_05_06 = 'google-ai-studio/gemini-2.5-pro-preview-05-06',
 	GEMINI_2_5_FLASH_PREVIEW_04_17 = 'google-ai-studio/gemini-2.5-flash-preview-04-17',
 	GEMINI_2_5_FLASH_PREVIEW_05_20 = 'google-ai-studio/gemini-2.5-flash-preview-05-20',
@@ -30,16 +31,17 @@ export enum AIModels {
 	CLAUDE_SONNET_4_5 = 'anthropic/claude-sonnet-4-5-20250929',
 	CLAUDE_HAIKU_4_5 = 'anthropic/claude-haiku-4-5-20251001',
 
-	XAI_GROK_4 = 'xai/grok-4',
-	XAI_GROK_4_1 = 'xai/grok-4.1',
-	XAI_GROK_4_1_FAST = 'xai/grok-4.1-fast',
-	XAI_GROK_4_1_FAST_REASONING = 'xai/grok-4-1-fast-reasoning',
-	XAI_GROK_4_1_FAST_NON_REASONING = 'xai/grok-4-1-fast-non-reasoning',
-	XAI_GROK_CODE_FAST_1 = 'xai/grok-code-fast-1',
-	XAI_GROK_2_LATEST = 'xai/grok-2-latest',
-	XAI_GROK_2_1212 = 'xai/grok-2-1212',
-	XAI_GROK_BETA = 'xai/grok-beta',
-	XAI_GROK_VISION_BETA = 'xai/grok-vision-beta',
+	// Grok models (grok provider - uses XAI_API_KEY)
+	GROK_4_1_FAST_REASONING = 'grok/grok-4-1-fast-reasoning',
+	GROK_4_1_FAST_NON_REASONING = 'grok/grok-4-1-fast-non-reasoning',
+	GROK_CODE_FAST_1 = 'grok/grok-code-fast-1',
+	GROK_4 = 'grok/grok-4',
+	GROK_4_1 = 'grok/grok-4.1',
+	GROK_4_1_FAST = 'grok/grok-4.1-fast',
+	GROK_2_LATEST = 'grok/grok-2-latest',
+	GROK_2_1212 = 'grok/grok-2-1212',
+	GROK_BETA = 'grok/grok-beta',
+	GROK_VISION_BETA = 'grok/grok-vision-beta',
 
 	OPENAI_O3 = 'openai/o3',
 	OPENAI_O4_MINI = 'openai/o4-mini',

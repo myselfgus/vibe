@@ -225,23 +225,18 @@ function isValidApiKey(apiKey: string): boolean {
 
 async function getApiKey(provider: string, env: Env, _userId: string): Promise<string> {
     console.log("Getting API key for provider: ", provider);
-    // try {
-    //     const secretsService = new SecretsService(env);
-    //     const userProviderKeys = await secretsService.getUserBYOKKeysMap(userId);
-    //     // First check if user has a custom API key for this provider
-    //     if (userProviderKeys && provider in userProviderKeys) {
-    //         const userKey = userProviderKeys.get(provider);
-    //         if (userKey && isValidApiKey(userKey)) {
-    //             console.log("Found user API key for provider: ", provider, userKey);
-    //             return userKey;
-    //         }
-    //     }
-    // } catch (error) {
-    //     console.error("Error getting API key for provider: ", provider, error);
-    // }
-    // Fallback to environment variables
-    const providerKeyString = provider.toUpperCase().replaceAll('-', '_');
-    const envKey = `${providerKeyString}_API_KEY` as keyof Env;
+
+    // Provider to env var mapping (some providers use different env var names)
+    const providerEnvMapping: Record<string, string> = {
+        'grok': 'XAI',  // grok models use XAI_API_KEY
+        'google-ai-studio': 'GOOGLE_AI_STUDIO',
+        'anthropic': 'ANTHROPIC',
+        'openai': 'OPENAI',
+    };
+
+    // Get the env var prefix for this provider
+    const envPrefix = providerEnvMapping[provider] || provider.toUpperCase().replaceAll('-', '_');
+    const envKey = `${envPrefix}_API_KEY` as keyof Env;
     let apiKey: string = env[envKey] as string;
     
     // Check if apiKey is empty or undefined and is valid

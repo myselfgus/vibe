@@ -89,21 +89,30 @@ export function getByokModels(
 export function getPlatformEnabledProviders(env: Env): string[] {
 	const enabledProviders: string[] = [];
 
+	// Provider to env var mapping (must match core.ts getApiKey mapping)
+	const providerEnvMapping: Record<string, string> = {
+		'grok': 'XAI',  // grok models use XAI_API_KEY
+		'google-ai-studio': 'GOOGLE_AI_STUDIO',
+		'anthropic': 'ANTHROPIC',
+		'openai': 'OPENAI',
+		'cerebras': 'CEREBRAS',
+		'groq': 'GROQ',
+	};
+
 	// Check for provider API keys in environment variables
-	// Using the same pattern as core.ts getApiKey function
 	const providerList = [
 		'anthropic',
 		'openai',
 		'google-ai-studio',
 		'cerebras',
 		'groq',
-		'xai',
+		'grok',
 	];
 
 	for (const provider of providerList) {
-		// Convert provider name to env var format (same as core.ts)
-		const providerKeyString = provider.toUpperCase().replaceAll('-', '_');
-		const envKey = `${providerKeyString}_API_KEY` as keyof Env;
+		// Use mapping if available, otherwise convert provider name to env var format
+		const envPrefix = providerEnvMapping[provider] || provider.toUpperCase().replaceAll('-', '_');
+		const envKey = `${envPrefix}_API_KEY` as keyof Env;
 		const apiKey = env[envKey] as string;
 
 		// Use the same validation logic as core.ts isValidApiKey function

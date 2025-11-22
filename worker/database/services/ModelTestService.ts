@@ -176,7 +176,7 @@ export class ModelTestService extends BaseService {
             'anthropic': AIModels.CLAUDE_SONNET_4_5,
             'google-ai-studio': AIModels.GEMINI_2_5_FLASH,
             'gemini': AIModels.GEMINI_2_5_FLASH,
-            'xai': AIModels.XAI_GROK_4_1_FAST,
+            'grok': AIModels.GROK_4_1_FAST,
             'cerebras': AIModels.CEREBRAS_GPT_OSS
         };
 
