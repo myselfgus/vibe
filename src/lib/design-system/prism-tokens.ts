@@ -81,9 +81,10 @@ export const prismTokens = {
   },
 
   shadows: {
-    neomorph: '1px 1px 1px 0 rgba(0,0,0,0.7), -1px -1px 1px 0 rgba(255,255,255,0.7)',
-    neomorphInset: 'inset 1px 1px 1px 0 rgba(0,0,0,0.7), inset -1px -1px 1px 0 rgba(255,255,255,0.7)',
-    neomorphFlat: '1px 1px 1px 0 rgba(0,0,0,0.5)',
+    // Neumorphism sutil: blur 0-1px, spread -1/0, x+1 y+2, 70% opacity
+    neomorph: '1px 2px 1px -1px rgba(0,0,0,0.7)',
+    neomorphInset: 'inset 1px 2px 1px -1px rgba(0,0,0,0.7)',
+    neomorphFlat: '1px 2px 0px 0px rgba(0,0,0,0.7)',
     metallic: '0 2px 8px rgba(30, 58, 95, 0.15), 0 1px 4px rgba(85, 107, 47, 0.1)',
     metallicStrong: '0 4px 16px rgba(30, 58, 95, 0.25), 0 2px 8px rgba(85, 107, 47, 0.15)',
     glass: '0 8px 32px rgba(0, 0, 0, 0.1)',

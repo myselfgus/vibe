@@ -202,9 +202,10 @@
 	--build-chat-colors-text-tertiary: hsl(210, 15%, 45%);
 
 	/* === Shadows - Neumorphic & Metallic === */
-	--shadow-neomorph: 4px 4px 8px rgba(0,0,0,0.15), -4px -4px 8px rgba(255,255,255,0.95);
-	--shadow-neomorph-inset: inset 3px 3px 6px rgba(0,0,0,0.15), inset -3px -3px 6px rgba(255,255,255,0.95);
-	--shadow-neomorph-flat: 2px 2px 4px rgba(0,0,0,0.12), -2px -2px 4px rgba(255,255,255,0.85);
+	/* Neumorphism sutil: blur 0-1px, spread -1/0, x+1 y+2, 70% opacity */
+	--shadow-neomorph: 1px 2px 1px -1px rgba(0,0,0,0.7);
+	--shadow-neomorph-inset: inset 1px 2px 1px -1px rgba(0,0,0,0.7);
+	--shadow-neomorph-flat: 1px 2px 0px 0px rgba(0,0,0,0.7);
 	--shadow-metallic: 0 2px 8px rgba(30, 58, 95, 0.15), 0 1px 4px rgba(85, 107, 47, 0.1);
 	--shadow-metallic-strong: 0 4px 16px rgba(30, 58, 95, 0.25), 0 2px 8px rgba(85, 107, 47, 0.15);
 	--shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.1);
@@ -267,9 +268,10 @@
 	--build-chat-colors-text-tertiary: hsl(210, 10%, 55%);
 
 	/* === Shadows - Enhanced for Dark Mode === */
-	--shadow-neomorph: 5px 5px 10px rgba(0,0,0,0.5), -5px -5px 10px rgba(255,255,255,0.04);
-	--shadow-neomorph-inset: inset 4px 4px 8px rgba(0,0,0,0.5), inset -4px -4px 8px rgba(255,255,255,0.04);
-	--shadow-neomorph-flat: 3px 3px 6px rgba(0,0,0,0.4), -3px -3px 6px rgba(255,255,255,0.03);
+	/* Neumorphism sutil: blur 0-1px, spread -1/0, x+1 y+2, 70% opacity */
+	--shadow-neomorph: 1px 2px 1px -1px rgba(0,0,0,0.7);
+	--shadow-neomorph-inset: inset 1px 2px 1px -1px rgba(0,0,0,0.7);
+	--shadow-neomorph-flat: 1px 2px 0px 0px rgba(0,0,0,0.7);
 	--shadow-metallic: 0 2px 12px rgba(30, 93, 189, 0.25), 0 1px 6px rgba(124, 179, 66, 0.15);
 	--shadow-metallic-strong: 0 4px 24px rgba(30, 93, 189, 0.35), 0 2px 12px rgba(124, 179, 66, 0.2);
 	--shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -496,41 +498,68 @@ display: none; /* Chrome, Safari, Opera */
    ============================================ */
 
 /* === NEUMORPHISM === */
+/* Estilo sutil com bordas transparentes/cinza claro */
 .neomorph-card {
 	background: hsl(var(--card));
 	box-shadow: var(--shadow-neomorph);
 	border-radius: var(--radius);
+	border: 1px solid transparent;
 	transition: all 0.3s ease-out;
 }
 
 .neomorph-card:hover {
 	box-shadow: var(--shadow-metallic-strong);
+	border-color: rgba(0,0,0,0.05);
+}
+
+.dark .neomorph-card {
+	border-color: rgba(255,255,255,0.03);
+}
+
+.dark .neomorph-card:hover {
+	border-color: rgba(255,255,255,0.06);
 }
 
 .neomorph-button {
 	background: hsl(var(--card));
 	box-shadow: var(--shadow-neomorph);
 	border-radius: var(--radius);
+	border: 1px solid transparent;
 	transition: all 0.15s ease-out;
 }
 
 .neomorph-button:hover {
 	box-shadow: var(--shadow-neomorph-flat);
+	border-color: rgba(0,0,0,0.05);
 }
 
 .neomorph-button:active {
 	box-shadow: var(--shadow-neomorph-inset);
 }
 
+.dark .neomorph-button {
+	border-color: rgba(255,255,255,0.03);
+}
+
 .neomorph-input {
 	background: hsl(var(--input));
 	box-shadow: var(--shadow-neomorph-inset);
 	border-radius: calc(var(--radius) - 0.25rem);
+	border: 1px solid rgba(0,0,0,0.03);
 	transition: all 0.2s ease-out;
 }
 
 .neomorph-input:focus {
 	box-shadow: var(--shadow-neomorph-inset), 0 0 0 2px hsl(var(--ring));
+	border-color: rgba(0,0,0,0.05);
+}
+
+.dark .neomorph-input {
+	border-color: rgba(255,255,255,0.03);
+}
+
+.dark .neomorph-input:focus {
+	border-color: rgba(255,255,255,0.06);
 }
 
 /* === GLASSMORPHISM === */
@@ -702,6 +731,7 @@ display: none; /* Chrome, Safari, Opera */
 	background: hsl(var(--card));
 	box-shadow: var(--shadow-neomorph);
 	border-radius: var(--radius);
+	border: 1px solid transparent;
 	transition: all 0.3s ease-out;
 	position: relative;
 	overflow: hidden;
@@ -709,6 +739,15 @@ display: none; /* Chrome, Safari, Opera */
 
 .prism-card:hover {
 	box-shadow: var(--shadow-metallic-strong);
+	border-color: rgba(0,0,0,0.05);
+}
+
+.dark .prism-card {
+	border-color: rgba(255,255,255,0.03);
+}
+
+.dark .prism-card:hover {
+	border-color: rgba(255,255,255,0.06);
 }
 
 .prism-card::before {
@@ -762,6 +801,7 @@ display: none; /* Chrome, Safari, Opera */
 	color: hsl(var(--primary-foreground));
 	box-shadow: var(--shadow-neomorph);
 	border-radius: var(--radius);
+	border: 1px solid transparent;
 	transition: all 0.15s ease-out;
 }
 
@@ -784,6 +824,7 @@ display: none; /* Chrome, Safari, Opera */
 	color: hsl(var(--secondary-foreground));
 	box-shadow: var(--shadow-neomorph);
 	border-radius: var(--radius);
+	border: 1px solid transparent;
 	transition: all 0.15s ease-out;
 }
 
@@ -811,11 +852,20 @@ display: none; /* Chrome, Safari, Opera */
 	border-radius: calc(var(--radius) - 0.25rem);
 	transition: all 0.2s ease-out;
 	color: hsl(var(--foreground));
-	border: 1px solid hsl(var(--border));
+	border: 1px solid rgba(0,0,0,0.03);
 }
 
 .prism-input:focus {
 	box-shadow: var(--shadow-neomorph-inset), 0 0 0 2px hsl(var(--ring));
+	border-color: rgba(0,0,0,0.05);
+}
+
+.dark .prism-input {
+	border-color: rgba(255,255,255,0.03);
+}
+
+.dark .prism-input:focus {
+	border-color: rgba(255,255,255,0.06);
 }
 
 /* === ANIMATION UTILITIES === */

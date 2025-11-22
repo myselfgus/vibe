@@ -47,7 +47,7 @@ function FloatingPaths({ position }: { position: number }) {
 
 export default function BackgroundPaths() {
   return (
-    <div className="fixed inset-0 z-[-1] overflow-hidden bg-white dark:bg-neutral-950">
+    <div className="fixed inset-0 z-[-1] overflow-hidden">
       <FloatingPaths position={1} />
       <FloatingPaths position={-1} />
     </div>
