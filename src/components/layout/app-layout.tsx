@@ -1,6 +1,5 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router';
-import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from './app-sidebar';
 import { GlobalHeader } from './global-header';
 import { AppsDataProvider } from '@/contexts/apps-data-context';
@@ -16,22 +15,13 @@ export function AppLayout({ children }: AppLayoutProps) {
   return (
     <AppsDataProvider>
       <BackgroundPaths />
-      <SidebarProvider 
-        defaultOpen={false}
-        style={{
-          "--sidebar-width": "320px",
-          "--sidebar-width-mobile": "280px",
-          "--sidebar-width-icon": "52px"
-        } as React.CSSProperties}
-      >
+      <div className="flex flex-col h-screen relative">
+        <GlobalHeader />
+        <main className={clsx("flex-1", pathname !== "/" && "min-h-0 overflow-auto")}>
+          {children || <Outlet />}
+        </main>
         <AppSidebar />
-        <SidebarInset className={clsx("flex flex-col h-screen relative", pathname !== "/" && "overflow-hidden")}>
-          <GlobalHeader />
-          <div className={clsx("flex-1", pathname !== "/" && "min-h-0 overflow-auto")}>
-            {children || <Outlet />}
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
+      </div>
     </AppsDataProvider>
   );
 }

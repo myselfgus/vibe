@@ -9,6 +9,7 @@ import Settings from './routes/settings/index';
 import AppsPage from './routes/apps';
 import AppView from './routes/app';
 import DiscoverPage from './routes/discover';
+import RecentsPage from './routes/recents';
 import { ProtectedRoute } from './routes/protected-route';
 
 const routes = [
@@ -35,6 +36,10 @@ const routes = [
 			{
 				path: 'apps',
 				element: React.createElement(ProtectedRoute, { children: React.createElement(AppsPage) }),
+			},
+			{
+				path: 'recents',
+				element: React.createElement(ProtectedRoute, { children: React.createElement(RecentsPage) }),
 			},
 			{
 				path: 'app/:id',
