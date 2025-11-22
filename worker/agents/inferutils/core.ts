@@ -186,30 +186,29 @@ function optimizeTextContent(content: string): string {
     return content;
 }
 
-export async function buildGatewayUrl(env: Env, providerOverride?: AIGatewayProviders): Promise<string> {
-    // If CLOUDFLARE_AI_GATEWAY_URL is set and is a valid URL, use it directly
-    if (env.CLOUDFLARE_AI_GATEWAY_URL && 
-        env.CLOUDFLARE_AI_GATEWAY_URL !== 'none' && 
+export async function buildGatewayUrl(env: Env, _providerOverride?: AIGatewayProviders): Promise<string> {
+    // Always use /compat endpoint (OpenAI-compatible) - model is specified in request body
+    // This matches the api-client pattern that works correctly
+    if (env.CLOUDFLARE_AI_GATEWAY_URL &&
+        env.CLOUDFLARE_AI_GATEWAY_URL !== 'none' &&
         env.CLOUDFLARE_AI_GATEWAY_URL.trim() !== '') {
-        
+
         try {
             const url = new URL(env.CLOUDFLARE_AI_GATEWAY_URL);
-            // Validate it's actually an HTTP/HTTPS URL
             if (url.protocol === 'http:' || url.protocol === 'https:') {
-                // Add 'providerOverride' as a segment to the URL
-                const cleanPathname = url.pathname.replace(/\/$/, ''); // Remove trailing slash
-                url.pathname = providerOverride ? `${cleanPathname}/${providerOverride}` : `${cleanPathname}/compat`;
+                const cleanPathname = url.pathname.replace(/\/$/, '');
+                // Always use /compat for OpenAI-compatible endpoint
+                url.pathname = `${cleanPathname}/compat`;
                 return url.toString();
             }
         } catch (error) {
-            // Invalid URL, fall through to use bindings
             console.warn(`Invalid CLOUDFLARE_AI_GATEWAY_URL provided: ${env.CLOUDFLARE_AI_GATEWAY_URL}. Falling back to AI bindings.`);
         }
     }
-    
-    // Build the url via bindings
+
+    // Build via bindings - always use compat endpoint
     const gateway = env.AI.gateway(env.CLOUDFLARE_AI_GATEWAY);
-    const baseUrl = providerOverride ? await gateway.getUrl(providerOverride) : `${await gateway.getUrl()}compat`;
+    const baseUrl = `${await gateway.getUrl()}compat`;
     return baseUrl;
 }
 
@@ -253,49 +252,42 @@ async function getApiKey(provider: string, env: Env, _userId: string): Promise<s
 }
 
 export async function getConfigurationForModel(
-    model: AIModels | string, 
-    env: Env, 
+    model: AIModels | string,
+    env: Env,
     userId: string,
 ): Promise<{
     baseURL: string,
     apiKey: string,
     defaultHeaders?: Record<string, string>,
 }> {
-    let providerForcedOverride: AIGatewayProviders | undefined;
-    // Check if provider forceful-override is set
+    // Check if provider forceful-override is set (e.g. [openrouter]model)
     const match = model.match(/\[(.*?)\]/);
     if (match) {
         const provider = match[1];
+        // Only openrouter bypasses gateway (external service)
         if (provider === 'openrouter') {
             return {
                 baseURL: 'https://openrouter.ai/api/v1',
                 apiKey: env.OPENROUTER_API_KEY,
             };
-        } else if (provider === 'gemini') {
-            return {
-                baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
-                apiKey: env.GOOGLE_AI_STUDIO_API_KEY,
-            };
-        } else if (provider === 'claude') {
-            return {
-                baseURL: 'https://api.anthropic.com/v1/',
-                apiKey: env.ANTHROPIC_API_KEY,
-            };
         }
-        providerForcedOverride = provider as AIGatewayProviders;
     }
 
-    const baseURL = await buildGatewayUrl(env, providerForcedOverride);
+    // All providers go through Cloudflare AI Gateway with /compat endpoint
+    // This matches the working api-client pattern
+    const baseURL = await buildGatewayUrl(env);
 
-    // Extract the provider name from model name. Model name is of type `provider/model_name`
-    const provider = providerForcedOverride || model.split('/')[0];
-    // Try to find API key of type <PROVIDER>_API_KEY else default to CLOUDFLARE_AI_GATEWAY_TOKEN
-    // `env` is an interface of type `Env`
+    // Extract provider from model name (e.g. 'anthropic/claude-sonnet-4-5' -> 'anthropic')
+    const provider = model.split('/')[0];
+
+    // Get API key for the provider
     const apiKey = await getApiKey(provider, env, userId);
-    // AI Gateway Wholesaling checks
-    const defaultHeaders = env.CLOUDFLARE_AI_GATEWAY_TOKEN && apiKey !== env.CLOUDFLARE_AI_GATEWAY_TOKEN ? {
+
+    // Always include cf-aig-authorization header for gateway wholesaling
+    const defaultHeaders = env.CLOUDFLARE_AI_GATEWAY_TOKEN ? {
         'cf-aig-authorization': `Bearer ${env.CLOUDFLARE_AI_GATEWAY_TOKEN}`,
     } : undefined;
+
     return {
         baseURL,
         apiKey,
@@ -387,12 +379,6 @@ export class AbortError extends InferError {
     }
 }
 
-const claude_thinking_budget_tokens = {
-    medium: 8000,
-    high: 16000,
-    low: 4000,
-    minimal: 1000,
-};
 
 export type InferResponseObject<OutputSchema extends z.AnyZodObject> = {
     object: z.infer<OutputSchema>;
@@ -511,15 +497,9 @@ export async function infer<OutputSchema extends z.AnyZodObject>({
             schema && schemaName && !format
                 ? { response_format: zodResponseFormat(schema, schemaName) }
                 : {};
-        const extraBody = modelName.includes('claude')? {
-                    extra_body: {
-                        thinking: {
-                            type: 'enabled',
-                            budget_tokens: claude_thinking_budget_tokens[reasoning_effort ?? 'medium'],
-                        },
-                    },
-                }
-            : {};
+        // Note: Claude extended thinking via extra_body is not supported through Cloudflare AI Gateway /compat endpoint
+        // All providers now use the same simple request format for gateway compatibility
+        const extraBody = {};
 
         // Optimize messages to reduce token count
         const optimizedMessages = optimizeInputs(messages);
