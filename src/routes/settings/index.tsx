@@ -513,15 +513,15 @@ export default function SettingsPage() {
 	}, [user]);
 
 	return (
-		<div className="min-h-screen bg-bg-3 relative">
-			<main className="container mx-auto px-4 py-8 max-w-4xl">
-				<div className="space-y-8">
+		<div className="min-h-screen">
+			<main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-4xl">
+				<div className="space-y-6 sm:space-y-8">
 					{/* Page Header */}
 					<div>
-						<h1 className="text-4xl font-bold font-[departureMono] text-red-500">
+						<h1 className="text-[clamp(1.5rem,6vw,2.5rem)] font-bold font-[departureMono] text-red-500">
 							SETTINGS
 						</h1>
-						<p className="text-text-tertiary mt-2">
+						<p className="text-text-tertiary mt-2 text-sm sm:text-base">
 							Manage your account settings and preferences
 						</p>
 					</div>
@@ -626,7 +626,7 @@ export default function SettingsPage() {
 								</div>
 							</div>
 						</CardHeader>
-						<CardContent className="space-y-6 px-6">
+						<CardContent className="space-y-6 px-3 sm:px-6">
 							{/* Provider API Keys Integration */}
 							<div className="space-y-2 mt-6">
 								<h4 className="font-medium">
@@ -687,7 +687,7 @@ export default function SettingsPage() {
 								</div>
 							</div>
 						</CardHeader>
-						<CardContent className="space-y-3 mt-4 px-6">
+						<CardContent className="space-y-3 mt-4 px-3 sm:px-6">
 							{/* App Environment Variables Section */}
 							{/* <div className="space-y-4">
 								<div className="flex justify-between items-center">
@@ -1682,7 +1682,7 @@ export default function SettingsPage() {
 								</div>
 							</div>
 						</CardHeader>
-						<CardContent className="space-y-3 mt-2 px-6">
+						<CardContent className="space-y-3 mt-2 px-3 sm:px-6">
 							{/* Connected Accounts */}
 							<div className="space-y-2">
 								<h4 className="font-medium">

@@ -47,6 +47,7 @@ declare namespace Cloudflare {
 		Sandbox: DurableObjectNamespace<import("./worker/index").UserAppSandboxService>;
 		DORateLimitStore: DurableObjectNamespace<import("./worker/index").DORateLimitStore>;
 		TEMPLATES_BUCKET: R2Bucket;
+		USER_FILES_BUCKET: R2Bucket;
 		DB: D1Database;
 		DISPATCHER: DispatchNamespace;
 		API_RATE_LIMITER: RateLimit;

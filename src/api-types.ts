@@ -273,3 +273,11 @@ export type {
     GitHubExportOptions,
     GitHubExportResult,
 } from 'worker/services/github/types';
+
+// Files API Types
+export type {
+    UserFile,
+    FileListData,
+    FileUploadData,
+    FileDeleteData,
+} from 'worker/api/controllers/files/types';

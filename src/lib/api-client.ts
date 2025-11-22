@@ -56,7 +56,10 @@ import type{
     CodeGenArgs,
     AgentPreviewResponse,
     PlatformStatusData,
-    RateLimitError
+    RateLimitError,
+    FileListData,
+    FileUploadData,
+    FileDeleteData,
 } from '@/api-types';
 import {
     
@@ -1185,6 +1188,68 @@ class ApiClient {
 
 		// Redirect to OAuth provider
 		window.location.href = oauthUrl.toString();
+	}
+
+	// ===============================
+	// User Files API Methods
+	// ===============================
+
+	/**
+	 * Upload a file to user storage
+	 */
+	async uploadFile(file: File): Promise<ApiResponse<FileUploadData>> {
+		const formData = new FormData();
+		formData.append('file', file);
+
+		// Need to ensure CSRF token for POST
+		await this.ensureCsrfToken('POST');
+		const authHeaders = this.getAuthHeaders();
+
+		const response = await fetch(`${this.baseUrl}/api/files/upload`, {
+			method: 'POST',
+			credentials: 'include',
+			headers: authHeaders,
+			body: formData,
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json().catch(() => ({}));
+			throw new ApiError(
+				response.status,
+				response.statusText,
+				errorData.error?.message || 'Failed to upload file',
+				'/api/files/upload'
+			);
+		}
+
+		return response.json();
+	}
+
+	/**
+	 * List user's uploaded files
+	 */
+	async listFiles(): Promise<ApiResponse<FileListData>> {
+		return this.request<FileListData>('/api/files');
+	}
+
+	/**
+	 * Get/download a specific file
+	 */
+	async getFile(fileId: string): Promise<Response> {
+		const authHeaders = this.getAuthHeaders();
+		return fetch(`${this.baseUrl}/api/files/${fileId}`, {
+			credentials: 'include',
+			headers: authHeaders,
+		});
+	}
+
+	/**
+	 * Delete a file
+	 */
+	async deleteFile(fileId: string): Promise<ApiResponse<FileDeleteData>> {
+		return this.request<FileDeleteData>(`/api/files/${fileId}`, {
+			method: 'DELETE',
+		});
 	}
 }
 

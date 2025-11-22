@@ -143,7 +143,7 @@ export default function Home() {
 							"px-6 p-8 flex flex-col items-center z-10",
 							discoverReady ? "mt-48" : "mt-[20vh] sm:mt-[24vh] md:mt-[28vh]"
 						)}>
-						<h1 className="text-foreground leading-[1.1] tracking-tight text-5xl w-full mb-4 font-josefin font-extrabold">
+						<h1 className="text-foreground leading-[1.1] tracking-tight text-[clamp(2rem,8vw,4rem)] w-full mb-4 font-josefin font-extrabold">
 							CONCEPT2CODE
 						</h1>
 
@@ -154,7 +154,7 @@ export default function Home() {
 								const query = textareaRef.current!.value;
 								handleCreateApp(query, agentMode);
 							}}
-							className="flex z-10 flex-col w-full min-h-[150px] bg-card/5 backdrop-blur-xl border border-white/20 rounded-[20px] shadow-[0_8px_32px_rgba(0,0,0,0.1)] p-5 prism-transition"
+							className="flex z-10 flex-col w-full min-h-[150px] neomorph-card rounded-[20px] p-5 prism-transition"
 						>
 							<div 
 								className={clsx(

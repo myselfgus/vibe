@@ -9,12 +9,49 @@ export const SUPPORTED_IMAGE_MIME_TYPES = [
 ] as const;
 
 /**
- * Supported file MIME types for upload (includes images and text files)
+ * Supported file MIME types for upload (includes images, code, and archives)
  */
 export const SUPPORTED_FILE_MIME_TYPES = [
 	...SUPPORTED_IMAGE_MIME_TYPES,
+	// Text files
 	'text/plain',
 	'text/markdown',
+	'text/csv',
+	'text/html',
+	'text/css',
+	'text/xml',
+	// Code files
+	'text/javascript',
+	'text/typescript',
+	'text/x-python',
+	'text/x-java',
+	'text/x-c',
+	'text/x-cpp',
+	'text/x-csharp',
+	'text/x-go',
+	'text/x-rust',
+	'text/x-ruby',
+	'text/x-php',
+	'text/x-swift',
+	'text/x-kotlin',
+	'text/x-scala',
+	// Application types for code
+	'application/javascript',
+	'application/typescript',
+	'application/json',
+	'application/xml',
+	'application/x-yaml',
+	'application/x-sh',
+	// Archives
+	'application/zip',
+	'application/x-zip-compressed',
+	'application/x-tar',
+	'application/gzip',
+	'application/x-gzip',
+	'application/x-7z-compressed',
+	'application/x-rar-compressed',
+	// Documents
+	'application/pdf',
 ] as const;
 
 export type SupportedImageMimeType = typeof SUPPORTED_IMAGE_MIME_TYPES[number];
@@ -85,6 +122,11 @@ export function getFileExtensionFromMimeType(mimeType: SupportedImageMimeType): 
  * Maximum file size for images (10MB)
  */
 export const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024;
+
+/**
+ * Maximum file size for all uploads (50MB)
+ */
+export const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024;
 
 /**
  * Maximum number of images per message
