@@ -17,6 +17,7 @@ export interface UseImageUploadOptions {
 export interface UseImageUploadReturn {
 	images: ImageAttachment[];
 	addImages: (files: File[]) => Promise<void>;
+	addAttachments: (attachments: ImageAttachment[]) => void;
 	removeImage: (id: string) => void;
 	clearImages: () => void;
 	isProcessing: boolean;
@@ -138,9 +139,21 @@ export function useImageUpload(options: UseImageUploadOptions = {}): UseImageUpl
 		setImages([]);
 	}, []);
 
+	const addAttachments = useCallback((attachments: ImageAttachment[]) => {
+		// Check if adding these would exceed the limit
+		if (images.length + attachments.length > maxImages) {
+			const errorMsg = `Maximum ${maxImages} attachments allowed per message.`;
+			toast.error(errorMsg);
+			onError?.(errorMsg);
+			return;
+		}
+		setImages(prev => [...prev, ...attachments]);
+	}, [images.length, maxImages, onError]);
+
 	return {
 		images,
 		addImages,
+		addAttachments,
 		removeImage,
 		clearImages,
 		isProcessing,

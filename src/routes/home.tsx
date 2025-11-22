@@ -15,6 +15,7 @@ import { useImageUpload } from '@/hooks/use-image-upload';
 import { useDragDrop } from '@/hooks/use-drag-drop';
 import { ImageUploadButton } from '@/components/image-upload-button';
 import { ImageAttachmentPreview } from '@/components/image-attachment-preview';
+import { R2FilePicker } from '@/components/r2-file-picker';
 import { SUPPORTED_FILE_MIME_TYPES } from '@/api-types';
 
 export default function Home() {
@@ -25,7 +26,7 @@ export default function Home() {
 	const [query, setQuery] = useState('');
 	const { user } = useAuth();
 
-	const { images, addImages, removeImage, clearImages, isProcessing } = useImageUpload({
+	const { images, addImages, addAttachments, removeImage, clearImages, isProcessing } = useImageUpload({
 		onError: (error) => {
 			// TODO: Show error toast/notification
 			console.error('Image upload error:', error);
@@ -212,6 +213,12 @@ export default function Home() {
 									onFilesSelected={addImages}
 									disabled={isProcessing}
 								/>
+								{user && (
+									<R2FilePicker
+										onFilesSelected={addAttachments}
+										disabled={isProcessing}
+									/>
+								)}
 								<button
 									type="submit"
 									disabled={!query.trim()}
