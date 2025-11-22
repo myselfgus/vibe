@@ -1,10 +1,19 @@
+/**
+ * Files Routes
+ * API routes for user file storage management
+ */
+
 import { Hono } from 'hono';
 import type { AppEnv } from '../../types/appenv';
 import { FilesController } from '../controllers/files/controller';
+import { AuthConfig, setAuthLevel } from '../../middleware/auth/routeAuth';
 
 export function setupFilesRoutes(app: Hono<AppEnv>): void {
+    // Create a sub-router for files routes
+    const filesRouter = new Hono<AppEnv>();
+
     // Upload a file
-    app.post('/api/files/upload', async (c) => {
+    filesRouter.post('/upload', setAuthLevel(AuthConfig.authenticated), async (c) => {
         const user = c.get('user');
         if (!user) {
             return c.json({ success: false, error: { message: 'Unauthorized' } }, 401);
@@ -13,7 +22,7 @@ export function setupFilesRoutes(app: Hono<AppEnv>): void {
     });
 
     // List user's files
-    app.get('/api/files', async (c) => {
+    filesRouter.get('/', setAuthLevel(AuthConfig.authenticated), async (c) => {
         const user = c.get('user');
         if (!user) {
             return c.json({ success: false, error: { message: 'Unauthorized' } }, 401);
@@ -22,7 +31,7 @@ export function setupFilesRoutes(app: Hono<AppEnv>): void {
     });
 
     // Get/download a file
-    app.get('/api/files/:fileId', async (c) => {
+    filesRouter.get('/:fileId', setAuthLevel(AuthConfig.authenticated), async (c) => {
         const user = c.get('user');
         if (!user) {
             return c.json({ success: false, error: { message: 'Unauthorized' } }, 401);
@@ -32,7 +41,7 @@ export function setupFilesRoutes(app: Hono<AppEnv>): void {
     });
 
     // Delete a file
-    app.delete('/api/files/:fileId', async (c) => {
+    filesRouter.delete('/:fileId', setAuthLevel(AuthConfig.authenticated), async (c) => {
         const user = c.get('user');
         if (!user) {
             return c.json({ success: false, error: { message: 'Unauthorized' } }, 401);
@@ -40,4 +49,7 @@ export function setupFilesRoutes(app: Hono<AppEnv>): void {
         const fileId = c.req.param('fileId');
         return FilesController.deleteFile(c.req.raw, c.env, user, fileId);
     });
+
+    // Mount the router under /api/files
+    app.route('/api/files', filesRouter);
 }
