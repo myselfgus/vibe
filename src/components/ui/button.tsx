@@ -22,6 +22,8 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         success:
           "neomorph-button bg-success text-success-foreground hover:shadow-[var(--shadow-neomorph-flat)]",
+        aurora:
+          "aurora-button text-white font-semibold shadow-lg",
       },
       size: {
         default: "h-10 px-6 py-2.5 has-[>svg]:px-4",

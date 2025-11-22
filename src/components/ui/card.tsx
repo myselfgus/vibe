@@ -2,11 +2,13 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-function Card({ className, variant = "default", ...props }: React.ComponentProps<"div"> & { variant?: "default" | "glass" | "metallic" }) {
+function Card({ className, variant = "default", ...props }: React.ComponentProps<"div"> & { variant?: "default" | "glass" | "metallic" | "aurora" | "aurora-glass" }) {
   const variantClasses = {
     default: "neomorph-card",
     glass: "prism-card-glass",
     metallic: "neomorph-card metallic-sheen",
+    aurora: "aurora-card",
+    "aurora-glass": "glass-panel aurora-glow-hover",
   };
 
   return (
