@@ -6,7 +6,7 @@
 import { Hono } from 'hono';
 import type { AppEnv } from '../../types/appenv';
 import { FilesController } from '../controllers/files/controller';
-import { AuthConfig, setAuthLevel } from '../../middleware/auth/routeAuth';
+import { AuthConfig, setAuthLevel, enforceAuthRequirement } from '../../middleware/auth/routeAuth';
 
 export function setupFilesRoutes(app: Hono<AppEnv>): void {
     // Create a sub-router for files routes
@@ -14,6 +14,9 @@ export function setupFilesRoutes(app: Hono<AppEnv>): void {
 
     // Upload a file
     filesRouter.post('/upload', setAuthLevel(AuthConfig.authenticated), async (c) => {
+        const authResult = await enforceAuthRequirement(c);
+        if (authResult) return authResult;
+
         const user = c.get('user');
         if (!user) {
             return c.json({ success: false, error: { message: 'Unauthorized' } }, 401);
@@ -23,6 +26,9 @@ export function setupFilesRoutes(app: Hono<AppEnv>): void {
 
     // List user's files
     filesRouter.get('/', setAuthLevel(AuthConfig.authenticated), async (c) => {
+        const authResult = await enforceAuthRequirement(c);
+        if (authResult) return authResult;
+
         const user = c.get('user');
         if (!user) {
             return c.json({ success: false, error: { message: 'Unauthorized' } }, 401);
@@ -32,6 +38,9 @@ export function setupFilesRoutes(app: Hono<AppEnv>): void {
 
     // Get/download a file
     filesRouter.get('/:fileId', setAuthLevel(AuthConfig.authenticated), async (c) => {
+        const authResult = await enforceAuthRequirement(c);
+        if (authResult) return authResult;
+
         const user = c.get('user');
         if (!user) {
             return c.json({ success: false, error: { message: 'Unauthorized' } }, 401);
@@ -42,6 +51,9 @@ export function setupFilesRoutes(app: Hono<AppEnv>): void {
 
     // Delete a file
     filesRouter.delete('/:fileId', setAuthLevel(AuthConfig.authenticated), async (c) => {
+        const authResult = await enforceAuthRequirement(c);
+        if (authResult) return authResult;
+
         const user = c.get('user');
         if (!user) {
             return c.json({ success: false, error: { message: 'Unauthorized' } }, 401);
