@@ -11,6 +11,7 @@ import AppView from './routes/app';
 import DiscoverPage from './routes/discover';
 import RecentsPage from './routes/recents';
 import ExplorerPage from './routes/explorer';
+import TerminalPage from './routes/terminal';
 import { ProtectedRoute } from './routes/protected-route';
 
 const routes = [
@@ -53,6 +54,10 @@ const routes = [
 			{
 				path: 'explorer',
 				element: React.createElement(ProtectedRoute, { children: React.createElement(ExplorerPage) }),
+			},
+			{
+				path: 'terminal',
+				element: React.createElement(ProtectedRoute, { children: React.createElement(TerminalPage) }),
 			},
 		],
 	},

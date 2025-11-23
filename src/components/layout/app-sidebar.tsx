@@ -5,6 +5,7 @@ import {
 	Compass,
 	Clock,
 	FolderOpen,
+	Terminal,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
 import { useNavigate, useLocation } from 'react-router';
@@ -164,6 +165,30 @@ export function AppSidebar() {
 							</TooltipContent>
 							<TooltipContent side="right" className="hidden lg:block">
 								My Files
+							</TooltipContent>
+						</Tooltip>
+
+						{/* Terminal */}
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<button
+									onClick={() => navigate('/terminal')}
+									className={cn(
+										'flex items-center justify-center rounded-full transition-all duration-200',
+										'w-10 h-10 lg:w-12 lg:h-12',
+										isActive('/terminal')
+											? 'bg-muted text-foreground'
+											: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+									)}
+								>
+									<Terminal className="h-5 w-5 lg:h-6 lg:w-6" />
+								</button>
+							</TooltipTrigger>
+							<TooltipContent side="top" className="lg:hidden">
+								SSH Terminal
+							</TooltipContent>
+							<TooltipContent side="right" className="hidden lg:block">
+								SSH Terminal
 							</TooltipContent>
 						</Tooltip>
 
