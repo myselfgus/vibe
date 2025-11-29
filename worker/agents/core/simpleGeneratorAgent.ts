@@ -224,7 +224,20 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
                     initArgs.onBlueprintChunk(chunk);
                 }
             }
-        })
+        });
+
+        // Validate blueprint was generated successfully
+        if (!blueprint) {
+            const errorMessage = 'Failed to generate project blueprint. Please try again with a different query or check your API configuration.';
+            this.logger().error(errorMessage);
+            throw new Error(errorMessage);
+        }
+
+        if (!blueprint.initialPhase || !blueprint.initialPhase.files || blueprint.initialPhase.files.length === 0) {
+            const errorMessage = 'Blueprint was generated but contains no files. Please try a more specific project description.';
+            this.logger().error(errorMessage, { blueprint });
+            throw new Error(errorMessage);
+        }
 
         const packageJson = templateInfo.templateDetails?.allFiles['package.json'];
 

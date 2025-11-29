@@ -150,6 +150,16 @@ export class CodingAgentController extends BaseController {
                 writer.write("terminate");
                 writer.close();
                 this.logger.info(`Agent ${agentId} terminated successfully`);
+            }).catch(async (error: unknown) => {
+                const errorMessage = error instanceof Error ? error.message : 'Failed to initialize code generation';
+                this.logger.error(`Agent ${agentId} initialization failed:`, error);
+                try {
+                    writer.write({ error: errorMessage, type: 'initialization_error' });
+                    writer.write("terminate");
+                    writer.close();
+                } catch (writeError) {
+                    this.logger.error('Failed to write error to stream:', writeError);
+                }
             });
 
             this.logger.info(`Agent ${agentId} init launched successfully`);

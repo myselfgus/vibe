@@ -429,6 +429,21 @@ export function useChat({
 
 					for await (const obj of ndjsonStream(response.stream)) {
                         logger.debug('Received chunk from server:', obj);
+
+						// Handle initialization errors from the server
+						if (obj.error) {
+							logger.error('Initialization error from server:', obj.error);
+							setIsBootstrapping(false);
+							setIsGeneratingBlueprint(false);
+							const errorMessage = typeof obj.error === 'string'
+								? obj.error
+								: 'Failed to initialize code generation. Please try again.';
+							sendMessage(createAIMessage('error', `Error: ${errorMessage}`, false));
+							updateStage('blueprint', { status: 'error' });
+							toast.error(errorMessage);
+							return; // Stop processing the stream
+						}
+
 						if (obj.chunk) {
 							if (!startedBlueprintStream) {
 								sendMessage(createAIMessage('main', 'Blueprint is being generated...', true));
@@ -446,7 +461,7 @@ export function useChat({
 							} catch (e) {
 								logger.error('Error parsing JSON:', e, obj.chunk);
 							}
-						} 
+						}
 						if (obj.agentId) {
 							result.agentId = obj.agentId;
 						}
