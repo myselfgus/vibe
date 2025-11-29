@@ -208,24 +208,60 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
         this.logger().info('Generating blueprint', { query, queryLength: query.length, imagesCount: initArgs.images?.length || 0, codeFilesCount: initArgs.codeFiles?.length || 0 });
         this.logger().info(`Using language: ${language}, frameworks: ${frameworks ? frameworks.join(", ") : "none"}`);
         
-        const blueprint = await generateBlueprint({
-            env: this.env,
-            inferenceContext,
-            query,
-            language: language!,
-            frameworks: frameworks!,
-            templateDetails: templateInfo.templateDetails,
-            templateMetaInfo: templateInfo.selection,
-            images: initArgs.images,
-            codeFiles: initArgs.codeFiles,
-            stream: {
-                chunk_size: 256,
-                onChunk: (chunk) => {
-                    // initArgs.writer.write({chunk});
-                    initArgs.onBlueprintChunk(chunk);
+        let blueprint;
+        try {
+            blueprint = await generateBlueprint({
+                env: this.env,
+                inferenceContext,
+                query,
+                language: language!,
+                frameworks: frameworks!,
+                templateDetails: templateInfo.templateDetails,
+                templateMetaInfo: templateInfo.selection,
+                images: initArgs.images,
+                codeFiles: initArgs.codeFiles,
+                stream: {
+                    chunk_size: 256,
+                    onChunk: (chunk) => {
+                        // initArgs.writer.write({chunk});
+                        initArgs.onBlueprintChunk(chunk);
+                    }
                 }
+            });
+
+            // Validate blueprint structure
+            if (!blueprint) {
+                throw new Error('Blueprint generation returned null or undefined');
             }
-        })
+            
+            if (!blueprint.initialPhase) {
+                this.logger().error('Generated blueprint is missing initialPhase', {
+                    blueprintTitle: blueprint.title,
+                    blueprintKeys: Object.keys(blueprint),
+                    hasInitialPhase: !!blueprint.initialPhase
+                });
+                throw new Error('Generated blueprint is missing required initialPhase. This may indicate an LLM generation issue.');
+            }
+
+            this.logger().info('Blueprint generated successfully', { 
+                title: blueprint.title,
+                projectName: blueprint.projectName,
+                hasInitialPhase: !!blueprint.initialPhase,
+                initialPhaseFiles: blueprint.initialPhase.files?.length || 0
+            });
+        } catch (error) {
+            this.logger().error('Failed to generate blueprint', {
+                error: error instanceof Error ? error.message : String(error),
+                stack: error instanceof Error ? error.stack : undefined
+            });
+            
+            // Broadcast detailed error to frontend
+            this.broadcast(WebSocketMessageResponses.ERROR, {
+                error: `Blueprint generation failed: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again or simplify your request.`
+            });
+            
+            throw error;
+        }
 
         const packageJson = templateInfo.templateDetails?.allFiles['package.json'];
 
@@ -828,6 +864,17 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
         });
         await this.ensureTemplateDetails();
 
+        // Validate blueprint exists before starting generation
+        if (!this.state.blueprint) {
+            const error = new Error('Blueprint is not available. Please ensure the project is properly initialized.');
+            this.logger().error('Cannot start code generation without blueprint', {
+                hasBlueprintInState: !!this.state.blueprint,
+                projectName: this.state.projectName,
+                templateName: this.state.templateName
+            });
+            throw error;
+        }
+
         let currentDevState = CurrentDevState.PHASE_IMPLEMENTING;
         const generatedPhases = this.state.generatedPhases;
         const incompletedPhases = generatedPhases.filter(phase => !phase.completed);
@@ -843,6 +890,17 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
                 phase: generatedPhases[generatedPhases.length - 1]
             });
         } else {
+            // Validate initialPhase exists in blueprint
+            if (!this.state.blueprint.initialPhase) {
+                const error = new Error('Blueprint is missing initialPhase. Cannot start code generation.');
+                this.logger().error('Blueprint validation failed', {
+                    blueprintTitle: this.state.blueprint.title,
+                    hasInitialPhase: !!this.state.blueprint.initialPhase,
+                    blueprintKeys: Object.keys(this.state.blueprint)
+                });
+                throw error;
+            }
+            
             phaseConcept = this.state.blueprint.initialPhase;
             this.logger().info('Starting code generation from initial phase', {
                 phase: phaseConcept
