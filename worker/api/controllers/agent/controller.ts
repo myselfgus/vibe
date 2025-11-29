@@ -12,8 +12,8 @@ import { RateLimitService } from '../../../services/rate-limit/rateLimits';
 import { validateWebSocketOrigin } from '../../../middleware/security/websocket';
 import { createLogger } from '../../../logger';
 import { getPreviewDomain } from 'worker/utils/urls';
-import { ImageType, uploadImage } from 'worker/utils/images';
-import { ProcessedImageAttachment } from 'worker/types/image-attachment';
+import { ImageType, uploadImage, uploadCodeFile } from 'worker/utils/images';
+import { ProcessedImageAttachment, ProcessedCodeFileAttachment } from 'worker/types/image-attachment';
 import { getTemplateImportantFiles } from 'worker/services/sandbox/utils';
 
 const defaultCodeGenArgs: CodeGenArgs = {
@@ -116,11 +116,23 @@ export class CodingAgentController extends BaseController {
             const websocketUrl = `${url.protocol === 'https:' ? 'wss:' : 'ws:'}//${url.host}/api/agent/${agentId}/ws`;
             const httpStatusUrl = `${url.origin}/api/agent/${agentId}`;
 
+            // Upload images and code files to R2
             let uploadedImages: ProcessedImageAttachment[] = [];
             if (body.images) {
                 uploadedImages = await Promise.all(body.images.map(async (image) => {
                     return uploadImage(env, image, ImageType.UPLOADS);
                 }));
+            }
+            
+            let uploadedCodeFiles: ProcessedCodeFileAttachment[] = [];
+            if (body.codeFiles) {
+                uploadedCodeFiles = await Promise.all(body.codeFiles.map(async (file) => {
+                    return uploadCodeFile(env, file, ImageType.CODE_FILES);
+                }));
+                
+                this.logger.info(`Uploaded ${uploadedCodeFiles.length} code files`, {
+                    files: uploadedCodeFiles.map(f => f.filename)
+                });
             }
         
             writer.write({
@@ -131,7 +143,11 @@ export class CodingAgentController extends BaseController {
                 template: {
                     name: templateDetails.name,
                     files: getTemplateImportantFiles(templateDetails),
-                }
+                },
+                uploadedFiles: uploadedCodeFiles.length > 0 ? {
+                    count: uploadedCodeFiles.length,
+                    files: uploadedCodeFiles.map(f => f.filename)
+                } : undefined
             });
 
             const agentPromise = agentInstance.initialize({
@@ -141,6 +157,7 @@ export class CodingAgentController extends BaseController {
                 hostname,
                 inferenceContext,
                 images: uploadedImages,
+                codeFiles: uploadedCodeFiles,
                 onBlueprintChunk: (chunk: string) => {
                     writer.write({chunk});
                 },

@@ -3,7 +3,15 @@
 // Screenshot storage helpers
 // ===============================
 
-import { ImageAttachment, ProcessedImageAttachment, SupportedImageMimeType } from "worker/types/image-attachment";
+import { 
+    ImageAttachment, 
+    ProcessedImageAttachment, 
+    CodeFileAttachment,
+    ProcessedCodeFileAttachment,
+    SupportedImageMimeType,
+    SupportedCodeFileMimeType,
+    SupportedArchiveMimeType
+} from "worker/types/image-attachment";
 import { getProtocolForHost } from "./urls";
 
     
@@ -19,6 +27,7 @@ export function base64ToUint8Array(base64: string): Uint8Array {
 export enum ImageType {
     SCREENSHOTS = 'screenshots',
     UPLOADS = 'uploads',
+    CODE_FILES = 'code-files',
 }
 
 export async function uploadImageToCloudflareImages(env: Env, image: ImageAttachment, type: ImageType, bytes?: Uint8Array): Promise<string> {
@@ -153,4 +162,119 @@ export async function downloadR2Image(env: Env, r2Key: string) : Promise<Process
         publicUrl: cfImagesUrl || getPublicUrlForR2Image(env, r2Key),
         hash: await hashImageB64url(base64),
         mimeType,    }
+}
+
+// ===============================
+// Code file upload helpers
+// ===============================
+
+/**
+ * Upload a code file to R2 storage
+ */
+export async function uploadCodeFileToR2(
+    env: Env, 
+    file: CodeFileAttachment, 
+    type: ImageType
+): Promise<{ url: string; r2Key: string }> {
+    // Convert content to bytes
+    let data: Uint8Array;
+    if (file.isArchive) {
+        // Archive files are already base64 encoded
+        data = base64ToUint8Array(file.content);
+    } else {
+        // Text files need to be encoded
+        data = new TextEncoder().encode(file.content);
+    }
+    
+    const r2Key = `${type}/${file.id}/${encodeURIComponent(file.filename)}`;
+    await env.TEMPLATES_BUCKET.put(r2Key, data, { 
+        httpMetadata: { contentType: file.mimeType },
+        customMetadata: { 
+            originalFilename: file.filename,
+            isArchive: file.isArchive ? 'true' : 'false'
+        }
+    });
+
+    return { url: getPublicUrlForR2Image(env, r2Key), r2Key };
+}
+
+/**
+ * Hash code file content
+ */
+async function hashCodeFile(content: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(content);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * Upload a code file and return processed attachment
+ */
+export async function uploadCodeFile(
+    env: Env, 
+    file: CodeFileAttachment, 
+    type: ImageType
+): Promise<ProcessedCodeFileAttachment> {
+    const hashPromise = hashCodeFile(file.content);
+    const { r2Key, url } = await uploadCodeFileToR2(env, file, type);
+    const hash = await hashPromise;
+
+    return {
+        mimeType: file.mimeType,
+        filename: file.filename,
+        content: file.content,
+        r2Key,
+        publicUrl: url,
+        hash,
+        isArchive: file.isArchive,
+    };
+}
+
+/**
+ * Download a code file from R2
+ */
+export async function downloadR2CodeFile(env: Env, r2Key: string): Promise<ProcessedCodeFileAttachment> {
+    const response = await env.TEMPLATES_BUCKET.get(r2Key);
+    if (!response || !response.body) {
+        throw new Error('Failed to fetch code file from R2');
+    }
+    
+    const customMetadata = response.customMetadata;
+    const isArchive = customMetadata?.isArchive === 'true';
+    const contentType = response.httpMetadata?.contentType;
+    
+    if (!contentType) {
+        throw new Error('Code file has no content type metadata');
+    }
+    
+    const mimeType = contentType as (SupportedCodeFileMimeType | SupportedArchiveMimeType);
+    
+    let content: string;
+    let hash: string;
+    
+    if (isArchive) {
+        // For archives, return base64 and hash the original binary data
+        const arrayBuffer = await response.arrayBuffer();
+        const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        hash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        
+        content = Buffer.from(arrayBuffer).toString('base64');
+    } else {
+        // For text files, return as string and hash the text content
+        content = await response.text();
+        hash = await hashCodeFile(content);
+    }
+    
+    return {
+        mimeType,
+        filename: customMetadata?.originalFilename || r2Key.split('/').pop() || 'file',
+        content,
+        r2Key,
+        publicUrl: getPublicUrlForR2Image(env, r2Key),
+        hash,
+        isArchive,
+    };
 }

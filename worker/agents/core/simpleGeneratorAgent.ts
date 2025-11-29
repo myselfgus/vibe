@@ -205,7 +205,7 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
         this.initLogger(inferenceContext.agentId, sandboxSessionId, inferenceContext.userId);
         
         // Generate a blueprint
-        this.logger().info('Generating blueprint', { query, queryLength: query.length, imagesCount: initArgs.images?.length || 0 });
+        this.logger().info('Generating blueprint', { query, queryLength: query.length, imagesCount: initArgs.images?.length || 0, codeFilesCount: initArgs.codeFiles?.length || 0 });
         this.logger().info(`Using language: ${language}, frameworks: ${frameworks ? frameworks.join(", ") : "none"}`);
         
         const blueprint = await generateBlueprint({
@@ -217,6 +217,7 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
             templateDetails: templateInfo.templateDetails,
             templateMetaInfo: templateInfo.selection,
             images: initArgs.images,
+            codeFiles: initArgs.codeFiles,
             stream: {
                 chunk_size: 256,
                 onChunk: (chunk) => {
@@ -282,9 +283,21 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
         
         this.logger().info('Committed customized template files to git');
 
+        // Start async initialization (sandbox deployment and setup commands)
         this.initializeAsync().catch((error: unknown) => {
             this.broadcastError("Initialization failed", error);
         });
+        
+        // Start code generation automatically after blueprint creation
+        // This runs independently of initializeAsync() since it only needs the blueprint
+        this.logger().info('Starting automatic code generation after blueprint');
+        Promise.resolve().then(() => {
+            // Use microtask to ensure state is fully updated before generation starts
+            this.generateAllFiles().catch((error: unknown) => {
+                this.broadcastError("Code generation failed", error);
+            });
+        });
+        
         this.logger().info(`Agent ${this.getAgentId()} session: ${this.state.sessionId} initialized successfully`);
         await this.saveToDatabase();
         return this.state;

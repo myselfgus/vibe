@@ -1,5 +1,5 @@
 import { PreviewType } from "../../../services/sandbox/sandboxTypes";
-import type { ImageAttachment } from '../../../types/image-attachment';
+import type { ImageAttachment, CodeFileAttachment } from '../../../types/image-attachment';
 
 export interface CodeGenArgs {
     query: string;
@@ -8,6 +8,7 @@ export interface CodeGenArgs {
     selectedTemplate?: string;
     agentMode: 'deterministic' | 'smart';
     images?: ImageAttachment[];
+    codeFiles?: CodeFileAttachment[];
 }
 
 /**

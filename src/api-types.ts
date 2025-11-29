@@ -195,11 +195,29 @@ export type AgentStreamingResponse = StreamingResponse;
 
 export {
 	type ImageAttachment,
+	type CodeFileAttachment,
+	type FileAttachment,
+	type ProcessedImageAttachment,
+	type ProcessedCodeFileAttachment,
+	type ProcessedAttachment,
+	type SupportedImageMimeType,
+	type SupportedCodeFileMimeType,
+	type SupportedArchiveMimeType,
+	type SupportedFileMimeType,
 	isSupportedImageType,
+	isSupportedCodeFileType,
+	isSupportedArchiveType,
 	isSupportedFileType,
+	getMimeTypeFromExtension,
 	MAX_IMAGE_SIZE_BYTES,
+	MAX_CODE_FILE_SIZE_BYTES,
+	MAX_ARCHIVE_SIZE_BYTES,
 	MAX_IMAGES_PER_MESSAGE,
+	MAX_CODE_FILES_PER_MESSAGE,
+	MAX_ARCHIVES_PER_MESSAGE,
 	SUPPORTED_IMAGE_MIME_TYPES,
+	SUPPORTED_CODE_FILE_MIME_TYPES,
+	SUPPORTED_ARCHIVE_MIME_TYPES,
 	SUPPORTED_FILE_MIME_TYPES
 } from 'worker/types/image-attachment';
 
