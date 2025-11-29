@@ -142,6 +142,31 @@ export interface ProcessedImageAttachment {
 }
 
 /**
+ * Processed code file attachment stored in R2
+ */
+export interface ProcessedCodeFileAttachment {
+	/** MIME type of the file */
+	mimeType: SupportedCodeFileMimeType | SupportedArchiveMimeType;
+	/** Original filename */
+	filename: string;
+	/** File content (text or base64 for archives) */
+	content?: string;
+	/** R2 key of the file */
+	r2Key: string;
+	/** URL of the file */
+	publicUrl: string;
+	/** file data hash */
+	hash: string;
+	/** Whether this is an archive file */
+	isArchive?: boolean;
+}
+
+/**
+ * Union type for all processed attachments
+ */
+export type ProcessedAttachment = ProcessedImageAttachment | ProcessedCodeFileAttachment;
+
+/**
  * Utility to check if a MIME type is supported (image)
  */
 export function isSupportedImageType(mimeType: string): mimeType is SupportedImageMimeType {

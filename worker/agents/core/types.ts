@@ -6,7 +6,7 @@ import type { InferenceContext } from '../inferutils/config.types';
 import type { TemplateDetails } from '../../services/sandbox/sandboxTypes';
 import { TemplateSelection } from '../schemas';
 import { CurrentDevState } from './state';
-import { ProcessedImageAttachment } from 'worker/types/image-attachment';
+import { ProcessedImageAttachment, ProcessedCodeFileAttachment } from 'worker/types/image-attachment';
 
 export interface AgentInitArgs {
     query: string;
@@ -19,6 +19,7 @@ export interface AgentInitArgs {
         selection: TemplateSelection;
     }
     images?: ProcessedImageAttachment[];
+    codeFiles?: ProcessedCodeFileAttachment[];
     onBlueprintChunk: (chunk: string) => void;
 }
 
@@ -47,6 +48,7 @@ export interface AgentSummary {
 export interface UserContext {
     suggestions?: string[];
     images?: ProcessedImageAttachment[];  // Image URLs
+    codeFiles?: ProcessedCodeFileAttachment[]; // Code file attachments
 }
 
 export interface PhaseExecutionResult {
