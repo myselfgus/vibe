@@ -180,6 +180,19 @@ export interface BlueprintGenerationArgs {
 // Update function signature and system prompt
 export async function generateBlueprint({ env, inferenceContext, query, language, frameworks, templateDetails, templateMetaInfo, images, stream }: BlueprintGenerationArgs): Promise<Blueprint> {
     try {
+        // Validate prerequisites
+        if (!query || query.trim().length === 0) {
+            throw new Error('Query is required to generate a blueprint. Please provide a project description.');
+        }
+
+        if (!templateDetails) {
+            throw new Error('Template details are required. No template was selected for this project.');
+        }
+
+        if (!inferenceContext) {
+            throw new Error('Inference context is required. Please ensure proper initialization.');
+        }
+
         logger.info("Generating application blueprint", { query, queryLength: query.length, imagesCount: images?.length || 0 });
         logger.info(templateDetails ? `Using template: ${templateDetails.name}` : "Not using a template.");
 
@@ -227,7 +240,7 @@ export async function generateBlueprint({ env, inferenceContext, query, language
         //     reasoningEffort = undefined;
         // }
 
-        const { object: results } = await executeInference({
+        const inferenceResult = await executeInference({
             env,
             messages,
             agentActionName: "blueprint",
@@ -236,15 +249,33 @@ export async function generateBlueprint({ env, inferenceContext, query, language
             stream: stream,
         });
 
-        if (results) {
-            // Filter and remove any pdf files
-            results.initialPhase.files = results.initialPhase.files.filter(f => !f.path.endsWith('.pdf'));
+        // Check if inference returned a valid result
+        if (!inferenceResult || !inferenceResult.object) {
+            logger.error('Blueprint generation returned empty result');
+            throw new Error('Failed to generate blueprint. The AI model did not return a valid response. Please try again or check your API configuration.');
         }
 
-        // // A hack
-        // if (results?.initialPhase) {
-        //     results.initialPhase.lastPhase = false;
-        // }
+        const results = inferenceResult.object;
+
+        // Validate the blueprint structure
+        if (!results.initialPhase) {
+            logger.error('Blueprint missing initialPhase', { results });
+            throw new Error('Generated blueprint is incomplete. Missing initial phase definition.');
+        }
+
+        if (!results.initialPhase.files || results.initialPhase.files.length === 0) {
+            logger.error('Blueprint initialPhase has no files', { results });
+            throw new Error('Generated blueprint has no files to create. Please try a more specific project description.');
+        }
+
+        // Filter and remove any pdf files
+        results.initialPhase.files = results.initialPhase.files.filter(f => !f.path.endsWith('.pdf'));
+
+        logger.info('Blueprint generated successfully', {
+            projectName: results.projectName,
+            filesCount: results.initialPhase.files.length,
+        });
+
         return results as Blueprint;
     } catch (error) {
         logger.error("Error generating blueprint:", error);

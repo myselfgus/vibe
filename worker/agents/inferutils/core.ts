@@ -238,11 +238,20 @@ async function getApiKey(provider: string, env: Env, _userId: string): Promise<s
     const envPrefix = providerEnvMapping[provider] || provider.toUpperCase().replaceAll('-', '_');
     const envKey = `${envPrefix}_API_KEY` as keyof Env;
     let apiKey: string = env[envKey] as string;
-    
+
     // Check if apiKey is empty or undefined and is valid
     if (!isValidApiKey(apiKey)) {
+        console.log(`API key for ${provider} (${envKey}) not found or invalid, falling back to CLOUDFLARE_AI_GATEWAY_TOKEN`);
         apiKey = env.CLOUDFLARE_AI_GATEWAY_TOKEN;
     }
+
+    // Final validation - throw error if no valid API key available
+    if (!isValidApiKey(apiKey)) {
+        const errorMessage = `No valid API key found for provider "${provider}". Please configure ${envKey} or CLOUDFLARE_AI_GATEWAY_TOKEN in your environment variables.`;
+        console.error(errorMessage);
+        throw new Error(errorMessage);
+    }
+
     return apiKey;
 }
 
@@ -588,12 +597,37 @@ export async function infer<OutputSchema extends z.AnyZodObject>({
                 console.log('Inference cancelled by user');
                 throw new AbortError('**User cancelled inference**', toolCallContext);
             }
-            
-            console.error(`Failed to get inference response from OpenAI: ${error}`);
-            if ((error instanceof Error && error.message.includes('429')) || (typeof error === 'string' && error.includes('429'))) {
-                throw new RateLimitExceededError('Rate limit exceeded in LLM calls, Please try again later', RateLimitType.LLM_CALLS);
+
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            console.error(`Failed to get inference response: ${errorMessage}`);
+
+            // Handle specific error cases with clear messages
+            if (errorMessage.includes('429') || errorMessage.includes('rate limit')) {
+                throw new RateLimitExceededError('Rate limit exceeded in LLM calls. Please try again later.', RateLimitType.LLM_CALLS);
             }
-            throw error;
+
+            if (errorMessage.includes('401') || errorMessage.includes('Unauthorized') || errorMessage.includes('invalid_api_key')) {
+                throw new Error(`API authentication failed for model "${modelName}". Please check your API key configuration.`);
+            }
+
+            if (errorMessage.includes('404') || errorMessage.includes('model not found') || errorMessage.includes('does not exist')) {
+                throw new Error(`Model "${modelName}" not found or not available. Please check your model configuration.`);
+            }
+
+            if (errorMessage.includes('500') || errorMessage.includes('502') || errorMessage.includes('503')) {
+                throw new Error(`AI provider service is temporarily unavailable. Please try again in a few moments.`);
+            }
+
+            if (errorMessage.includes('timeout') || errorMessage.includes('ETIMEDOUT')) {
+                throw new Error(`Request to AI provider timed out. Please try again.`);
+            }
+
+            if (errorMessage.includes('network') || errorMessage.includes('ECONNREFUSED') || errorMessage.includes('fetch failed')) {
+                throw new Error(`Network error connecting to AI provider. Please check your connection and try again.`);
+            }
+
+            // Re-throw with original error message for unknown errors
+            throw new Error(`AI inference failed: ${errorMessage}`);
         }
         let toolCalls: ChatCompletionMessageFunctionToolCall[] = [];
 
