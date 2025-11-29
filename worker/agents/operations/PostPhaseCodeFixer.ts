@@ -97,6 +97,10 @@ export class FastCodeFixerOperation extends AgentOperation<FastCodeFixerInputs, 
             context: options.inferenceContext,
         });
 
+        if (!result || !result.string) {
+            return []; // Return empty array if no result
+        }
+
         const files = codeGenerationFormat.deserialize(result.string);
         return files;
     }

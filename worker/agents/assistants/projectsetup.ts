@@ -127,6 +127,12 @@ ${error}`);
                 context: this.inferenceContext,
                 modelName: error? AIModels.CLAUDE_HAIKU_4_5 : undefined,
             });
+
+            if (!results || !results.string) {
+                this.logger.warn('Setup command generation returned no result');
+                return { commands: [] };
+            }
+
             this.logger.info(`Generated setup commands: ${results.string}`);
 
             this.save([createAssistantMessage(results.string)]);

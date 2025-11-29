@@ -218,7 +218,7 @@ export class PhaseGenerationOperation extends AgentOperation<PhaseGenerationInpu
                 userMessage
             ];
     
-            const { object: results } = await executeInference({
+            const inferenceResult = await executeInference({
                 env: env,
                 messages,
                 agentActionName: "phaseGeneration",
@@ -227,9 +227,14 @@ export class PhaseGenerationOperation extends AgentOperation<PhaseGenerationInpu
                 reasoning_effort: (userContext?.suggestions || issues.runtimeErrors.length > 0) ? AGENT_CONFIG.phaseGeneration.reasoning_effort == 'low' ? 'medium' : 'high' : undefined,
                 format: 'markdown',
             });
-    
+
+            if (!inferenceResult || !inferenceResult.object) {
+                throw new Error('Failed to generate next phase: AI model did not return a valid response after multiple attempts.');
+            }
+
+            const results = inferenceResult.object;
             logger.info(`Generated next phase: ${results.name}, ${results.description}`);
-    
+
             return results;
         } catch (error) {
             logger.error("Error generating next phase:", error);

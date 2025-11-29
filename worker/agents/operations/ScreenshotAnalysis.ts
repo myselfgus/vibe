@@ -98,7 +98,7 @@ export class ScreenshotAnalysisOperation extends AgentOperation<ScreenshotAnalys
                 )
             ];
     
-            const { object: analysisResult } = await executeInference({
+            const inferenceResult = await executeInference({
                 env: env,
                 messages,
                 schema: ScreenshotAnalysisSchema,
@@ -106,11 +106,13 @@ export class ScreenshotAnalysisOperation extends AgentOperation<ScreenshotAnalys
                 context: options.inferenceContext,
                 retryLimit: 3
             });
-    
-            if (!analysisResult) {
+
+            if (!inferenceResult || !inferenceResult.object) {
                 logger.warn('Screenshot analysis returned no result');
-                throw new Error('No analysis result');
+                throw new Error('Failed to analyze screenshot: AI model did not return a valid response.');
             }
+
+            const analysisResult = inferenceResult.object;
     
             logger.info('Screenshot analysis completed', {
                 hasIssues: analysisResult.hasIssues,

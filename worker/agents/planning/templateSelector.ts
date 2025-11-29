@@ -113,7 +113,7 @@ ENTROPY SEED: ${generateSecureToken(64)} - for unique results`;
             userMessage
         ];
 
-        const { object: selection } = await executeInference({
+        const result = await executeInference({
             env,
             messages,
             agentActionName: "templateSelection",
@@ -122,7 +122,20 @@ ENTROPY SEED: ${generateSecureToken(64)} - for unique results`;
             maxTokens: 2000,
         });
 
+        // Handle null result from inference (all retries exhausted)
+        if (!result || !result.object) {
+            logger.error('Template selection inference returned null after all retries');
+            return {
+                selectedTemplateName: null,
+                reasoning: "Failed to select template: AI model did not return a valid response after multiple attempts.",
+                useCase: null,
+                complexity: null,
+                styleSelection: null,
+                projectName: ''
+            };
+        }
 
+        const selection = result.object;
         logger.info(`AI template selection result: ${selection.selectedTemplateName || 'None'}, Reasoning: ${selection.reasoning}`);
         return selection;
 
