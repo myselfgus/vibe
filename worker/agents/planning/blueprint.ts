@@ -8,7 +8,7 @@ import { InferenceContext } from '../inferutils/config.types';
 import { TemplateRegistry } from '../inferutils/schemaFormatters';
 import z from 'zod';
 import { imagesToBase64 } from 'worker/utils/images';
-import { ProcessedImageAttachment } from 'worker/types/image-attachment';
+import { ProcessedImageAttachment, ProcessedCodeFileAttachment } from 'worker/types/image-attachment';
 import { getTemplateImportantFiles } from 'worker/services/sandbox/utils';
 
 const logger = createLogger('Blueprint');
@@ -168,6 +168,7 @@ export interface BlueprintGenerationArgs {
     templateDetails: TemplateDetails;
     templateMetaInfo: TemplateSelection;
     images?: ProcessedImageAttachment[];
+    codeFiles?: ProcessedCodeFileAttachment[];
     stream?: {
         chunk_size: number;
         onChunk: (chunk: string) => void;
@@ -178,9 +179,14 @@ export interface BlueprintGenerationArgs {
  * Generate a blueprint for the application based on user prompt
  */
 // Update function signature and system prompt
-export async function generateBlueprint({ env, inferenceContext, query, language, frameworks, templateDetails, templateMetaInfo, images, stream }: BlueprintGenerationArgs): Promise<Blueprint> {
+export async function generateBlueprint({ env, inferenceContext, query, language, frameworks, templateDetails, templateMetaInfo, images, codeFiles, stream }: BlueprintGenerationArgs): Promise<Blueprint> {
     try {
-        logger.info("Generating application blueprint", { query, queryLength: query.length, imagesCount: images?.length || 0 });
+        logger.info("Generating application blueprint", { 
+            query, 
+            queryLength: query.length, 
+            imagesCount: images?.length || 0,
+            codeFilesCount: codeFiles?.length || 0
+        });
         logger.info(templateDetails ? `Using template: ${templateDetails.name}` : "Not using a template.");
 
         // ---------------------------------------------------------------------------
@@ -204,13 +210,35 @@ export async function generateBlueprint({ env, inferenceContext, query, language
             dependencies: templateDetails.deps,
         }));
 
+        // Build user message with images and code files
+        let userMessageContent = `CLIENT REQUEST: "${query}"`;
+        
+        // Add code files context to the user message if present
+        if (codeFiles && codeFiles.length > 0) {
+            userMessageContent += '\n\n<UPLOADED_CODE_FILES>\n';
+            userMessageContent += 'The client has provided the following code files for reference:\n\n';
+            
+            for (const file of codeFiles) {
+                if (file.isArchive) {
+                    userMessageContent += `- ${file.filename} (archive file - extract and analyze contents)\n`;
+                } else {
+                    userMessageContent += `\n### File: ${file.filename}\n\`\`\`\n${file.content}\n\`\`\`\n`;
+                }
+            }
+            
+            userMessageContent += '\n</UPLOADED_CODE_FILES>\n\n';
+            userMessageContent += 'IMPORTANT: Analyze these files and incorporate their patterns, structure, and logic into the blueprint. ';
+            userMessageContent += 'If they represent existing code, design the application to extend or integrate with this codebase. ';
+            userMessageContent += 'Maintain consistency with the coding style and architecture shown in the uploaded files.\n';
+        }
+
         const userMessage = images && images.length > 0
             ? createMultiModalUserMessage(
-                `CLIENT REQUEST: "${query}"`,
+                userMessageContent,
                 await imagesToBase64(env, images), 
                 'high'
               )
-            : createUserMessage(`CLIENT REQUEST: "${query}"`);
+            : createUserMessage(userMessageContent);
 
         const messages = [
             systemPromptMessage,
