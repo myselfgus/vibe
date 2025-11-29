@@ -318,8 +318,8 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
 
 	// Separate files by type for convenience
 	const images = files.filter((f): f is ImageAttachment => 'base64Data' in f && 'dimensions' in f);
-	const codeFiles = files.filter((f): f is CodeFileAttachment => 'content' in f && !f.isArchive);
-	const archives = files.filter((f): f is CodeFileAttachment => 'content' in f && f.isArchive);
+	const codeFiles = files.filter((f): f is CodeFileAttachment => 'content' in f && f.isArchive !== true);
+	const archives = files.filter((f): f is CodeFileAttachment => 'content' in f && f.isArchive === true);
 
 	return {
 		files,
