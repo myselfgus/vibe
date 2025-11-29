@@ -228,6 +228,20 @@ export class PhaseGenerationOperation extends AgentOperation<PhaseGenerationInpu
                 format: 'markdown',
             });
     
+            // Validate phase generation result
+            if (!results) {
+                throw new Error('Phase generation returned null or undefined result');
+            }
+
+            if (!results.name || !results.description) {
+                logger.error('Phase generation result missing required fields', {
+                    hasName: !!results.name,
+                    hasDescription: !!results.description,
+                    resultKeys: Object.keys(results)
+                });
+                throw new Error('Phase generation returned incomplete result (missing name or description)');
+            }
+
             logger.info(`Generated next phase: ${results.name}, ${results.description}`);
     
             return results;

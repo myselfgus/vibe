@@ -264,10 +264,37 @@ export async function generateBlueprint({ env, inferenceContext, query, language
             stream: stream,
         });
 
-        if (results) {
-            // Filter and remove any pdf files
-            results.initialPhase.files = results.initialPhase.files.filter(f => !f.path.endsWith('.pdf'));
+        // Validate results structure
+        if (!results) {
+            throw new Error('Blueprint generation returned null or undefined result');
         }
+
+        if (!results.initialPhase) {
+            logger.error('Generated blueprint missing initialPhase', {
+                hasResults: !!results,
+                resultKeys: results ? Object.keys(results) : [],
+                title: results?.title
+            });
+            throw new Error('Blueprint generation completed but initialPhase is missing from the result');
+        }
+
+        // Filter and remove any pdf files from initialPhase
+        if (results.initialPhase.files) {
+            const originalCount = results.initialPhase.files.length;
+            results.initialPhase.files = results.initialPhase.files.filter(f => !f.path.endsWith('.pdf'));
+            const filteredCount = results.initialPhase.files.length;
+            
+            if (originalCount !== filteredCount) {
+                logger.info(`Filtered out ${originalCount - filteredCount} PDF file(s) from initialPhase`);
+            }
+        }
+
+        logger.info('Blueprint validation successful', {
+            title: results.title,
+            projectName: results.projectName,
+            initialPhaseFiles: results.initialPhase.files?.length || 0,
+            hasInitialPhase: true
+        });
 
         // // A hack
         // if (results?.initialPhase) {
