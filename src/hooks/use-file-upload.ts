@@ -165,9 +165,16 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
 						if (typeof result === 'string') {
 							content = result.split(',')[1];
 						} else {
-							// Convert ArrayBuffer to base64
+							// Convert ArrayBuffer to base64 using chunk processing for large files
 							const bytes = new Uint8Array(result as ArrayBuffer);
-							content = btoa(String.fromCharCode(...bytes));
+							// Use btoa with chunking for large files to avoid stack overflow
+							const chunkSize = 8192;
+							let base64 = '';
+							for (let i = 0; i < bytes.length; i += chunkSize) {
+								const chunk = bytes.subarray(i, Math.min(i + chunkSize, bytes.length));
+								base64 += String.fromCharCode(...chunk);
+							}
+							content = btoa(base64);
 						}
 					} else {
 						// For text files, use the content directly

@@ -243,16 +243,29 @@ export async function downloadR2CodeFile(env: Env, r2Key: string): Promise<Proce
     
     const customMetadata = response.customMetadata;
     const isArchive = customMetadata?.isArchive === 'true';
-    const mimeType = response.httpMetadata!.contentType! as (SupportedCodeFileMimeType | SupportedArchiveMimeType);
+    const contentType = response.httpMetadata?.contentType;
+    
+    if (!contentType) {
+        throw new Error('Code file has no content type metadata');
+    }
+    
+    const mimeType = contentType as (SupportedCodeFileMimeType | SupportedArchiveMimeType);
     
     let content: string;
+    let hash: string;
+    
     if (isArchive) {
-        // For archives, return base64
+        // For archives, return base64 and hash the original binary data
         const arrayBuffer = await response.arrayBuffer();
+        const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        hash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        
         content = Buffer.from(arrayBuffer).toString('base64');
     } else {
-        // For text files, return as string
+        // For text files, return as string and hash the text content
         content = await response.text();
+        hash = await hashCodeFile(content);
     }
     
     return {
@@ -261,7 +274,7 @@ export async function downloadR2CodeFile(env: Env, r2Key: string): Promise<Proce
         content,
         r2Key,
         publicUrl: getPublicUrlForR2Image(env, r2Key),
-        hash: await hashCodeFile(content),
+        hash,
         isArchive,
     };
 }
