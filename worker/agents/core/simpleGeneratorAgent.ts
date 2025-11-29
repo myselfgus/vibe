@@ -283,14 +283,19 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
         
         this.logger().info('Committed customized template files to git');
 
+        // Start async initialization (sandbox deployment and setup commands)
         this.initializeAsync().catch((error: unknown) => {
             this.broadcastError("Initialization failed", error);
         });
         
-        // Start code generation automatically after initialization
+        // Start code generation automatically after blueprint creation
+        // This runs independently of initializeAsync() since it only needs the blueprint
         this.logger().info('Starting automatic code generation after blueprint');
-        this.generateAllFiles().catch((error: unknown) => {
-            this.broadcastError("Code generation failed", error);
+        Promise.resolve().then(() => {
+            // Use microtask to ensure state is fully updated before generation starts
+            this.generateAllFiles().catch((error: unknown) => {
+                this.broadcastError("Code generation failed", error);
+            });
         });
         
         this.logger().info(`Agent ${this.getAgentId()} session: ${this.state.sessionId} initialized successfully`);

@@ -84,7 +84,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
 					const img = new Image();
 					img.onload = () => {
 						resolve({
-							id: `img-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+							id: `img-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
 							filename: file.name,
 							mimeType: mimeType as ImageAttachment['mimeType'],
 							base64Data,
@@ -99,7 +99,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
 					img.onerror = () => {
 						// Fallback without dimensions if image loading fails
 						resolve({
-							id: `img-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+							id: `img-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
 							filename: file.name,
 							mimeType: mimeType as ImageAttachment['mimeType'],
 							base64Data,
@@ -175,7 +175,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
 					}
 
 					resolve({
-						id: `file-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+						id: `file-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
 						filename: file.name,
 						mimeType: mimeType as CodeFileAttachment['mimeType'],
 						content,
