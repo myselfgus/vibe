@@ -255,7 +255,7 @@ export async function generateBlueprint({ env, inferenceContext, query, language
         //     reasoningEffort = undefined;
         // }
 
-        const { object: results } = await executeInference({
+        const inferenceResult = await executeInference({
             env,
             messages,
             agentActionName: "blueprint",
@@ -263,6 +263,14 @@ export async function generateBlueprint({ env, inferenceContext, query, language
             context: inferenceContext,
             stream: stream,
         });
+
+        // Validate inference result - executeInference can return null on failure
+        if (!inferenceResult) {
+            logger.error('Blueprint inference failed after all retries');
+            throw new Error('Blueprint generation failed after multiple attempts. Please try again or simplify your request.');
+        }
+
+        const results = inferenceResult.object;
 
         // Validate results structure
         if (!results) {

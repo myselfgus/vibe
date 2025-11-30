@@ -60,37 +60,83 @@ export async function getTemplateForQuery(
     logger: StructuredLogger,
 ) : Promise<{templateDetails: TemplateDetails, selection: TemplateSelection}> {
     // Fetch available templates
-    const templatesResponse = await SandboxSdkClient.listTemplates();
+    let templatesResponse;
+    try {
+        templatesResponse = await SandboxSdkClient.listTemplates();
+    } catch (error) {
+        logger.error('Failed to call listTemplates', {
+            error: error instanceof Error ? error.message : String(error)
+        });
+        throw new Error(`Template service unavailable: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+
     if (!templatesResponse || !templatesResponse.success) {
-        throw new Error(`Failed to fetch templates from sandbox service, ${templatesResponse.error}`);
+        logger.error('Template list request failed', {
+            error: templatesResponse?.error,
+            hasResponse: !!templatesResponse
+        });
+        throw new Error(`Failed to fetch templates from template service: ${templatesResponse?.error || 'Unknown error'}`);
+    }
+
+    if (templatesResponse.templates.length === 0) {
+        throw new Error('No templates available in the template catalog');
     }
         
-    const analyzeQueryResponse = await selectTemplate({
-        env,
-        inferenceContext,
-        query,
-        availableTemplates: templatesResponse.templates,
-        images,
-    });
-    
-    logger.info('Selected template', { selectedTemplate: analyzeQueryResponse });
-            
-    if (!analyzeQueryResponse.selectedTemplateName) {
-        logger.error('No suitable template found for code generation');
-        throw new Error('No suitable template found for code generation');
+    let analyzeQueryResponse;
+    try {
+        analyzeQueryResponse = await selectTemplate({
+            env,
+            inferenceContext,
+            query,
+            availableTemplates: templatesResponse.templates,
+            images,
+        });
+    } catch (error) {
+        logger.error('Template selection failed', {
+            error: error instanceof Error ? error.message : String(error),
+            query: query.substring(0, 100)
+        });
+        throw error; // Re-throw to preserve rate limit and security errors
     }
-            
+
+    logger.info('Selected template', { selectedTemplate: analyzeQueryResponse });
+
+    if (!analyzeQueryResponse.selectedTemplateName) {
+        logger.error('No suitable template found for code generation', {
+            reasoning: analyzeQueryResponse.reasoning,
+            availableTemplates: templatesResponse.templates.map(t => t.name)
+        });
+        throw new Error('No suitable template found for your request. Please try rephrasing your query.');
+    }
+
     const selectedTemplate = templatesResponse.templates.find(template => template.name === analyzeQueryResponse.selectedTemplateName);
     if (!selectedTemplate) {
-        logger.error('Selected template not found');
-        throw new Error('Selected template not found');
+        logger.error('Selected template not found in available templates', {
+            selectedName: analyzeQueryResponse.selectedTemplateName,
+            availableTemplates: templatesResponse.templates.map(t => t.name)
+        });
+        throw new Error(`Selected template '${analyzeQueryResponse.selectedTemplateName}' not found in available templates`);
     }
-    const templateDetailsResponse = await BaseSandboxService.getTemplateDetails(selectedTemplate.name);
+
+    let templateDetailsResponse;
+    try {
+        templateDetailsResponse = await BaseSandboxService.getTemplateDetails(selectedTemplate.name);
+    } catch (error) {
+        logger.error('Failed to fetch template details', {
+            templateName: selectedTemplate.name,
+            error: error instanceof Error ? error.message : String(error)
+        });
+        throw new Error(`Template service error: Failed to fetch template details for '${selectedTemplate.name}'`);
+    }
+
     if (!templateDetailsResponse.success || !templateDetailsResponse.templateDetails) {
-        logger.error('Failed to fetch files', { templateDetailsResponse });
-        throw new Error('Failed to fetch files');
+        logger.error('Template details request failed', {
+            templateName: selectedTemplate.name,
+            error: templateDetailsResponse.error
+        });
+        throw new Error(`Failed to fetch template files: ${templateDetailsResponse.error || 'Unknown error'}`);
     }
-            
+
     const templateDetails = templateDetailsResponse.templateDetails;
     return { templateDetails, selection: analyzeQueryResponse };
 }

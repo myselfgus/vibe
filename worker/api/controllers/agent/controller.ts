@@ -184,7 +184,32 @@ export class CodingAgentController extends BaseController {
                 }
             });
         } catch (error) {
-            this.logger.error('Error starting code generation', error);
+            this.logger.error('Error starting code generation', {
+                error: error instanceof Error ? error.message : String(error),
+                stack: error instanceof Error ? error.stack : undefined
+            });
+
+            // Provide more specific error responses based on error type
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+            // Check for template/sandbox service errors
+            if (errorMessage.includes('template') || errorMessage.includes('Template') ||
+                errorMessage.includes('sandbox') || errorMessage.includes('Sandbox')) {
+                return CodingAgentController.createErrorResponse(
+                    `Template service error: ${errorMessage}`,
+                    502
+                );
+            }
+
+            // Check for configuration errors
+            if (errorMessage.includes('config') || errorMessage.includes('Config') ||
+                errorMessage.includes('environment') || errorMessage.includes('Environment')) {
+                return CodingAgentController.createErrorResponse(
+                    `Configuration error: ${errorMessage}`,
+                    500
+                );
+            }
+
             return CodingAgentController.handleError(error, 'start code generation');
         }
     }
