@@ -586,24 +586,42 @@ class ApiClient {
 				body: args,
 				skipJsonParsing: true, // Don't parse JSON for streaming response
 			});
-			
+
 			// Check if response is ok
 			if (!response.ok) {
 				// Parse error response if available
-				const errorMessage = data?.error?.message || `Agent creation failed with status: ${response.status}`;
+				let errorMessage = data?.error?.message || `Code generation failed with status: ${response.status}`;
+
+				// Provide user-friendly messages based on status code
+				if (response.status === 502) {
+					errorMessage = 'Service temporarily unavailable. Please try again in a moment.';
+				} else if (response.status === 429) {
+					errorMessage = 'Rate limit exceeded. Please wait before trying again.';
+				} else if (response.status >= 500) {
+					errorMessage = data?.error?.message || 'Server error occurred. Please try again.';
+				}
+
 				throw new Error(errorMessage);
 			}
-			
+
 			return {
 				success: true,
 				stream: response
 			};
 		} catch (error) {
 			// Handle any network or parsing errors
-			const errorMessage = error instanceof Error ? error.message : 'Failed to create agent session';
-			toast.error(errorMessage);
-			
-            throw new Error(errorMessage);
+			let errorMessage = 'Failed to start code generation';
+
+			if (error instanceof Error) {
+				errorMessage = error.message;
+			}
+
+			// Don't show duplicate toast if it's already a handled error
+			if (!(error instanceof ApiError)) {
+				toast.error(errorMessage);
+			}
+
+			throw new Error(errorMessage);
 		}
 	}
 
