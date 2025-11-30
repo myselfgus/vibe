@@ -229,21 +229,51 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
                 }
             });
 
-            // Validate blueprint structure
+            // Comprehensive blueprint validation
             if (!blueprint) {
                 throw new Error('Blueprint generation returned null or undefined');
             }
             
+            // Validate required blueprint fields
+            const validationErrors: string[] = [];
+            
+            if (!blueprint.title) {
+                validationErrors.push('Blueprint is missing title');
+            }
+            
+            if (!blueprint.description) {
+                validationErrors.push('Blueprint is missing description');
+            }
+            
             if (!blueprint.initialPhase) {
-                this.logger().error('Generated blueprint is missing initialPhase', {
+                validationErrors.push('Blueprint is missing required initialPhase');
+            } else {
+                // Validate initialPhase structure
+                if (!blueprint.initialPhase.name) {
+                    validationErrors.push('Initial phase is missing name');
+                }
+                if (!blueprint.initialPhase.description) {
+                    validationErrors.push('Initial phase is missing description');
+                }
+                if (!blueprint.initialPhase.files || !Array.isArray(blueprint.initialPhase.files)) {
+                    validationErrors.push('Initial phase is missing files array');
+                } else if (blueprint.initialPhase.files.length === 0) {
+                    validationErrors.push('Initial phase has empty files array');
+                }
+            }
+            
+            if (validationErrors.length > 0) {
+                this.logger().error('Blueprint validation failed', {
                     blueprintTitle: blueprint.title,
                     blueprintKeys: Object.keys(blueprint),
-                    hasInitialPhase: !!blueprint.initialPhase
+                    validationErrors,
+                    hasInitialPhase: !!blueprint.initialPhase,
+                    initialPhaseKeys: blueprint.initialPhase ? Object.keys(blueprint.initialPhase) : []
                 });
-                throw new Error('Generated blueprint is missing required initialPhase. This may indicate an LLM generation issue.');
+                throw new Error(`Blueprint validation failed: ${validationErrors.join('; ')}. This may indicate an LLM generation issue.`);
             }
 
-            this.logger().info('Blueprint generated successfully', { 
+            this.logger().info('Blueprint generated and validated successfully', { 
                 title: blueprint.title,
                 projectName: blueprint.projectName,
                 hasInitialPhase: !!blueprint.initialPhase,
@@ -320,22 +350,41 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
         this.logger().info('Committed customized template files to git');
 
         // Start async initialization (sandbox deployment and setup commands)
+        // This runs in parallel with code generation
         this.initializeAsync().catch((error: unknown) => {
             this.broadcastError("Initialization failed", error);
         });
         
-        // Start code generation automatically after blueprint creation
+        // Save to database before starting code generation
+        try {
+            await this.saveToDatabase();
+        } catch (dbError) {
+            this.logger().error('Failed to save to database during initialization', {
+                error: dbError instanceof Error ? dbError.message : String(dbError),
+                stack: dbError instanceof Error ? dbError.stack : undefined
+            });
+            // Don't prevent generation from starting if database save fails
+            // The agent can still function without database persistence
+        }
+        
+        this.logger().info(`Agent ${this.getAgentId()} session: ${this.state.sessionId} initialized successfully`);
+        
+        // Start code generation automatically after blueprint creation and state persistence
         // This runs independently of initializeAsync() since it only needs the blueprint
+        // Use queueMicrotask to ensure state is fully persisted before starting generation
         this.logger().info('Starting automatic code generation after blueprint');
-        Promise.resolve().then(() => {
-            // Use microtask to ensure state is fully updated before generation starts
+        queueMicrotask(() => {
             this.generateAllFiles().catch((error: unknown) => {
+                this.logger().error('Code generation failed during automatic start', {
+                    error: error instanceof Error ? error.message : String(error),
+                    stack: error instanceof Error ? error.stack : undefined,
+                    agentId: this.getAgentId(),
+                    sessionId: this.state.sessionId
+                });
                 this.broadcastError("Code generation failed", error);
             });
         });
         
-        this.logger().info(`Agent ${this.getAgentId()} session: ${this.state.sessionId} initialized successfully`);
-        await this.saveToDatabase();
         return this.state;
     }
 
@@ -448,12 +497,20 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
     async ensureTemplateDetails() {
         if (!this.templateDetailsCache) {
             this.logger().info(`Loading template details for: ${this.state.templateName}`);
-            const results = await BaseSandboxService.getTemplateDetails(this.state.templateName);
-            if (!results.success || !results.templateDetails) {
-                throw new Error(`Failed to get template details for: ${this.state.templateName}`);
-            }
             
-            const templateDetails = results.templateDetails;
+            // Use retry logic for template loading as it involves network calls
+            const templateDetails = await this.withRetry(
+                async () => {
+                    const results = await BaseSandboxService.getTemplateDetails(this.state.templateName);
+                    if (!results.success || !results.templateDetails) {
+                        throw new Error(`Failed to get template details for: ${this.state.templateName}`);
+                    }
+                    return results.templateDetails;
+                },
+                'Loading template details',
+                3,  // 3 attempts
+                2000  // 2 second initial backoff
+            );
             
             const customizedAllFiles = { ...templateDetails.allFiles };
             
@@ -779,6 +836,69 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
         this.logger().info("Completed phases:", JSON.stringify(phases, null, 2));
     }
 
+    /**
+     * Retry an async operation with exponential backoff
+     * @param operation The operation to retry
+     * @param context Description of the operation for logging
+     * @param maxAttempts Maximum number of retry attempts (default: 3)
+     * @param initialBackoffMs Initial backoff delay in milliseconds (default: 1000)
+     * @param maxBackoffMs Maximum backoff delay (default: 30000)
+     */
+    private async withRetry<T>(
+        operation: () => Promise<T>,
+        context: string,
+        maxAttempts: number = 3,
+        initialBackoffMs: number = 1000,
+        maxBackoffMs: number = 30000
+    ): Promise<T> {
+        let lastError: unknown;
+        
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                this.logger().info(`${context} - Attempt ${attempt}/${maxAttempts}`);
+                const result = await operation();
+                
+                if (attempt > 1) {
+                    this.logger().info(`${context} - Succeeded on attempt ${attempt}`);
+                }
+                
+                return result;
+            } catch (error) {
+                lastError = error;
+                
+                this.logger().warn(`${context} - Attempt ${attempt}/${maxAttempts} failed`, {
+                    error: error instanceof Error ? error.message : String(error),
+                    attempt,
+                    maxAttempts
+                });
+                
+                // Don't retry rate limit errors or abort errors
+                // Check for both DOMException (standard) and Error with name 'AbortError'
+                if (error instanceof RateLimitExceededError || 
+                    (error instanceof DOMException && error.name === 'AbortError') ||
+                    (error instanceof Error && error.name === 'AbortError')) {
+                    throw error;
+                }
+                
+                // Don't wait after the last attempt
+                if (attempt < maxAttempts) {
+                    const backoffMs = Math.min(
+                        initialBackoffMs * Math.pow(2, attempt - 1),
+                        maxBackoffMs
+                    );
+                    this.logger().info(`${context} - Waiting ${backoffMs}ms before retry`);
+                    await new Promise(resolve => setTimeout(resolve, backoffMs));
+                }
+            }
+        }
+        
+        // All attempts failed
+        this.logger().error(`${context} - All ${maxAttempts} attempts failed`, {
+            error: lastError instanceof Error ? lastError.message : String(lastError)
+        });
+        throw lastError;
+    }
+
     private broadcastError(context: string, error: unknown): void {
         const errorMessage = error instanceof Error ? error.message : String(error);
         this.logger().error(`${context}:`, error);
@@ -875,10 +995,11 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
             throw error;
         }
 
-        let currentDevState = CurrentDevState.PHASE_IMPLEMENTING;
         const generatedPhases = this.state.generatedPhases;
         const incompletedPhases = generatedPhases.filter(phase => !phase.completed);
         let phaseConcept : PhaseConceptType | undefined;
+        let currentDevState = CurrentDevState.PHASE_IMPLEMENTING;
+        
         if (incompletedPhases.length > 0) {
             phaseConcept = incompletedPhases[incompletedPhases.length - 1];
             this.logger().info('Resuming code generation from incompleted phase', {
@@ -910,6 +1031,7 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
 
         let staticAnalysisCache: StaticAnalysisResponse | undefined;
         let userContext: UserContext | undefined;
+        let completedSuccessfully = false;
 
         // Store review cycles for later use
         this.setState({
@@ -948,29 +1070,50 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
             }
 
             this.logger().info("State machine completed successfully");
+            completedSuccessfully = true;
         } catch (error) {
+            this.logger().error("State machine encountered an error", {
+                error: error instanceof Error ? error.message : String(error),
+                stack: error instanceof Error ? error.stack : undefined,
+                agentId: this.getAgentId(),
+                sessionId: this.state.sessionId,
+                currentDevState,
+                phaseName: phaseConcept?.name
+            });
+            
             if (error instanceof RateLimitExceededError) {
-                this.logger().error("Error in state machine:", error);
+                this.logger().error("Rate limit exceeded during generation", error);
                 this.broadcast(WebSocketMessageResponses.RATE_LIMIT_ERROR, { error });
             } else {
                 this.broadcastError("Error during generation", error);
             }
-        } finally {
-            // Clear abort controller after generation completes
-            this.clearAbortController();
             
-            const appService = new AppService(this.env);
-            await appService.updateApp(
-                this.getAgentId(),
-                {
-                    status: 'completed',
-                }
-            );
+            // Re-throw to ensure caller knows generation failed
+            throw error;
+        } finally {
+            // Clear abort controller after generation completes or fails
+            this.clearAbortController();
             this.generationPromise = null;
-            this.broadcast(WebSocketMessageResponses.GENERATION_COMPLETE, {
-                message: "Code generation and review process completed.",
-                instanceId: this.state.sandboxInstanceId,
-            });
+            
+            // Only broadcast completion and update status if generation succeeded
+            if (completedSuccessfully) {
+                try {
+                    const appService = new AppService(this.env);
+                    await appService.updateApp(
+                        this.getAgentId(),
+                        {
+                            status: 'completed',
+                        }
+                    );
+                } catch (dbError) {
+                    this.logger().error("Failed to update app status to completed", dbError);
+                }
+                
+                this.broadcast(WebSocketMessageResponses.GENERATION_COMPLETE, {
+                    message: "Code generation and review process completed.",
+                    instanceId: this.state.sandboxInstanceId,
+                });
+            }
         }
     }
 
