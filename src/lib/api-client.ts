@@ -338,15 +338,37 @@ class ApiClient {
 					: JSON.stringify(options.body);
 		}
 
-		try {
-			const response = await fetch(url, config);
-			
-			// For streaming responses, skip JSON parsing if response is ok
-			if (options.skipJsonParsing && response.ok) {
-				return { response, data: null };
-			}
-			
-			const data = await response.json() as ApiResponse<T>;
+                try {
+                        const response = await fetch(url, config);
+
+                        const responseClone = response.clone();
+
+                        // For streaming responses, skip JSON parsing if response is ok
+                        if (options.skipJsonParsing && response.ok) {
+                                return { response, data: null };
+                        }
+
+                        const contentType = response.headers.get('Content-Type') || '';
+                        const shouldParseJson = contentType.includes('application/json');
+
+                        let data: ApiResponse<T> | null = null;
+
+                        // Try to parse JSON when expected or when the response failed
+                        if (shouldParseJson) {
+                                try {
+                                        data = await response.json() as ApiResponse<T>;
+                                } catch (parseError) {
+                                        console.warn('Failed to parse JSON response, falling back to text', parseError);
+                                }
+                        }
+
+                        // Fallback to raw text for non-JSON or failed parsing
+                        if (!data) {
+                                const text = await responseClone.text();
+                                if (text) {
+                                        data = { success: false, error: { message: text } } as unknown as ApiResponse<T>;
+                                }
+                        }
 
 			if (!response.ok) {
                 if (
