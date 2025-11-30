@@ -356,15 +356,24 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
         });
         
         // Save to database before starting code generation
-        await this.saveToDatabase();
+        try {
+            await this.saveToDatabase();
+        } catch (dbError) {
+            this.logger().error('Failed to save to database during initialization', {
+                error: dbError instanceof Error ? dbError.message : String(dbError),
+                stack: dbError instanceof Error ? dbError.stack : undefined
+            });
+            // Don't prevent generation from starting if database save fails
+            // The agent can still function without database persistence
+        }
         
         this.logger().info(`Agent ${this.getAgentId()} session: ${this.state.sessionId} initialized successfully`);
         
         // Start code generation automatically after blueprint creation and state persistence
         // This runs independently of initializeAsync() since it only needs the blueprint
-        // Use setImmediate equivalent (setTimeout 0) to ensure state is fully persisted
+        // Use queueMicrotask to ensure state is fully persisted before starting generation
         this.logger().info('Starting automatic code generation after blueprint');
-        setTimeout(() => {
+        queueMicrotask(() => {
             this.generateAllFiles().catch((error: unknown) => {
                 this.logger().error('Code generation failed during automatic start', {
                     error: error instanceof Error ? error.message : String(error),
@@ -374,7 +383,7 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
                 });
                 this.broadcastError("Code generation failed", error);
             });
-        }, 0);
+        });
         
         return this.state;
     }
@@ -864,7 +873,9 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
                 });
                 
                 // Don't retry rate limit errors or abort errors
+                // Check for both DOMException (standard) and Error with name 'AbortError'
                 if (error instanceof RateLimitExceededError || 
+                    (error instanceof DOMException && error.name === 'AbortError') ||
                     (error instanceof Error && error.name === 'AbortError')) {
                     throw error;
                 }
@@ -984,10 +995,11 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
             throw error;
         }
 
-        let currentDevState = CurrentDevState.PHASE_IMPLEMENTING;
         const generatedPhases = this.state.generatedPhases;
         const incompletedPhases = generatedPhases.filter(phase => !phase.completed);
         let phaseConcept : PhaseConceptType | undefined;
+        let currentDevState = CurrentDevState.PHASE_IMPLEMENTING;
+        
         if (incompletedPhases.length > 0) {
             phaseConcept = incompletedPhases[incompletedPhases.length - 1];
             this.logger().info('Resuming code generation from incompleted phase', {
@@ -1019,6 +1031,7 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
 
         let staticAnalysisCache: StaticAnalysisResponse | undefined;
         let userContext: UserContext | undefined;
+        let completedSuccessfully = false;
 
         // Store review cycles for later use
         this.setState({
@@ -1057,6 +1070,7 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
             }
 
             this.logger().info("State machine completed successfully");
+            completedSuccessfully = true;
         } catch (error) {
             this.logger().error("State machine encountered an error", {
                 error: error instanceof Error ? error.message : String(error),
@@ -1081,8 +1095,8 @@ export class SimpleCodeGeneratorAgent extends Agent<Env, CodeGenState> {
             this.clearAbortController();
             this.generationPromise = null;
             
-            // Only broadcast completion if generation succeeded (not caught by catch block)
-            if (currentDevState === CurrentDevState.IDLE) {
+            // Only broadcast completion and update status if generation succeeded
+            if (completedSuccessfully) {
                 try {
                     const appService = new AppService(this.env);
                     await appService.updateApp(
