@@ -1,1 +1,8 @@
+#!/bin/sh
+export PATH="$HOME/.bun/bin:$PATH"
+# Skip commitlint in CI/automated environments
+if [ -n "$CI" ] || [ -n "$GITHUB_ACTIONS" ]; then
+  echo "Skipping commitlint in CI environment"
+  exit 0
+fi
 bunx commitlint --edit $1
